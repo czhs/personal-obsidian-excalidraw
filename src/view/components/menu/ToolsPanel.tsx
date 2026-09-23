@@ -1,0 +1,855 @@
+import clsx from "clsx";
+import { Notice, TFile } from "obsidian";
+import * as React from "react";
+import { ActionButton } from "./ActionButton";
+import { ICONS, saveIcon, stringToSVG } from "../../../constants/actionIcons";
+import { DEVICE, SCRIPT_INSTALL_FOLDER } from "../../../constants/constants";
+import {
+  insertLaTeXToView,
+  search,
+} from "../../../utils/excalidrawViewHelpers";
+import { TextMode } from "../../../shared/TextMode";
+import type ExcalidrawView from "../../ExcalidrawView";
+import { t } from "../../../lang/helpers";
+import { ReleaseNotes } from "../../../shared/Dialogs/ReleaseNotes";
+import { ScriptIconMap } from "../../../shared/Scripts";
+import { ScriptInstallPrompt } from "src/shared/Dialogs/ScriptInstallPrompt";
+import {
+  isWinALTorMacOPT,
+  isWinCTRLorMacCMD,
+  isSHIFT,
+} from "src/utils/modifierkeyHelper";
+import { InsertPDFModal } from "src/shared/Dialogs/InsertPDFModal";
+import { ExportDialog } from "src/shared/Dialogs/ExportDialog";
+import { openExternalLink } from "src/utils/excalidrawViewUtils";
+import { UniversalInsertFileModal } from "src/shared/Dialogs/UniversalInsertFileModal";
+import { REM_VALUE } from "src/core/managers/StylesManager";
+import { getExcalidrawViews } from "src/utils/obsidianUtils";
+import { UIModeSettings } from "src/shared/Dialogs/UIModeSettings";
+import { getYouTubeUrl } from "src/constants/safeUrls";
+
+declare const PLUGIN_VERSION: string;
+
+type PanelProps = {
+  visible: boolean;
+  view: WeakRef<ExcalidrawView>;
+  centerPointer: () => void;
+  observer: WeakRef<ResizeObserver>;
+};
+
+export type PanelState = {
+  visible: boolean;
+  top: number;
+  left: number;
+  theme: "dark" | "light";
+  excalidrawViewMode: boolean;
+  minimized: boolean;
+  isDirty: boolean;
+  isFullscreen: boolean;
+  isPreviewMode: boolean;
+  scriptIconMap: ScriptIconMap | null;
+};
+
+const TOOLS_PANEL_WIDTH = () => REM_VALUE * 14.4;
+
+export class ToolsPanel extends React.Component<PanelProps, PanelState> {
+  pos1: number = 0;
+  pos2: number = 0;
+  pos3: number = 0;
+  pos4: number = 0;
+  penDownX: number = 0;
+  penDownY: number = 0;
+  previousWidth: number = 0;
+  previousHeight: number = 0;
+  onRightEdge: boolean = false;
+  onBottomEdge: boolean = false;
+  public containerRef: React.RefObject<HTMLDivElement>;
+  private getView(): ExcalidrawView | null {
+    return this.props.view?.deref() ?? null;
+  }
+
+  componentWillUnmount(): void {
+    if (this.containerRef.current) {
+      this.props.observer.deref()?.unobserve(this.containerRef.current);
+    }
+    this.setState({ scriptIconMap: null });
+    this.containerRef = null;
+  }
+
+  constructor(props: PanelProps) {
+    super(props);
+    const react = this.getView()?.packages.react;
+    this.containerRef = react.createRef();
+    this.state = {
+      visible: props.visible,
+      top: 50,
+      left: 200,
+      theme: "dark",
+      excalidrawViewMode: false,
+      minimized: false,
+      isDirty: false,
+      isFullscreen: false,
+      isPreviewMode: true,
+      scriptIconMap: {},
+    };
+  }
+
+  updateScriptIconMap(scriptIconMap: ScriptIconMap) {
+    this.setState(() => {
+      return { scriptIconMap };
+    });
+  }
+
+  setPreviewMode(isPreviewMode: boolean) {
+    this.setState(() => {
+      return {
+        isPreviewMode,
+      };
+    });
+  }
+
+  setFullscreen(isFullscreen: boolean) {
+    this.setState(() => {
+      return {
+        isFullscreen,
+      };
+    });
+  }
+
+  setDirty(isDirty: boolean) {
+    this.setState(() => {
+      return {
+        isDirty,
+      };
+    });
+  }
+
+  setExcalidrawViewMode(isViewModeEnabled: boolean) {
+    this.setState(() => {
+      return {
+        excalidrawViewMode: isViewModeEnabled,
+      };
+    });
+  }
+
+  toggleVisibility(isMobileOrZen: boolean) {
+    this.setTopCenter(isMobileOrZen);
+    this.setState((prevState: PanelState) => {
+      return {
+        visible: !prevState.visible,
+      };
+    });
+  }
+
+  setTheme(theme: "dark" | "light") {
+    this.setState(() => {
+      return {
+        theme,
+      };
+    });
+  }
+
+  setTopCenter(isMobileOrZen: boolean) {
+    this.setState(() => {
+      return {
+        left:
+          (this.containerRef.current.clientWidth -
+            TOOLS_PANEL_WIDTH() -
+            (isMobileOrZen ? 0 : TOOLS_PANEL_WIDTH() + 4)) /
+            2 +
+          this.containerRef.current.parentElement.offsetLeft +
+          (isMobileOrZen ? 0 : TOOLS_PANEL_WIDTH() + 4),
+        top: 64 + this.containerRef.current.parentElement.offsetTop,
+      };
+    });
+  }
+
+  updatePosition(deltaY: number = 0, deltaX: number = 0) {
+    this.setState((prevState: PanelState) => {
+      const { clientWidth: width, clientHeight: height } = this.containerRef
+        .current.firstElementChild as HTMLElement;
+
+      const top = prevState.top - deltaY;
+      const left = prevState.left - deltaX;
+
+      const {
+        clientWidth: parentWidth,
+        clientHeight: parentHeight,
+        offsetTop: parentOffsetTop,
+        offsetLeft: parentOffsetLeft,
+      } = this.containerRef.current.parentElement;
+
+      this.previousHeight = parentHeight;
+      this.previousWidth = parentWidth;
+      this.onBottomEdge = top >= parentHeight - height + parentOffsetTop;
+      this.onRightEdge = left >= parentWidth - width + parentOffsetLeft;
+
+      return {
+        top:
+          top < parentOffsetTop
+            ? parentOffsetTop
+            : this.onBottomEdge
+              ? parentHeight - height + parentOffsetTop
+              : top,
+        left:
+          left < parentOffsetLeft
+            ? parentOffsetLeft
+            : this.onRightEdge
+              ? parentWidth - width + parentOffsetLeft
+              : left,
+      };
+    });
+  }
+
+  actionOpenScriptInstallDialog() {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    new ScriptInstallPrompt(view.plugin).open();
+  }
+
+  actionOpenReleaseNotes() {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    new ReleaseNotes(view.app, view.plugin, PLUGIN_VERSION).open();
+  }
+
+  actionOpenAboutExcalidraw() {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    new ReleaseNotes(view.app, view.plugin, null, {
+      message: t("FIRST_RUN"),
+      persistVersion: false,
+      title: t("ABOUT_EXCALIDRAW"),
+    }).open();
+  }
+
+  actionConvertExcalidrawToMD() {
+    void this.getView()?.convertExcalidrawToMD();
+  }
+
+  actionToggleViewMode() {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    if (this.state.isPreviewMode) {
+      void view.changeTextMode(TextMode.raw);
+    } else {
+      void view.changeTextMode(TextMode.parsed);
+    }
+  }
+
+  actionToggleTrayMode() {
+    const plugin = this.getView()?.plugin;
+    if (!plugin) {
+      return;
+    }
+    new UIModeSettings(plugin).open();
+  }
+
+  actionToggleFullscreen() {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    if (this.state.isFullscreen) {
+      view.exitFullscreen();
+    } else {
+      view.gotoFullscreen();
+    }
+  }
+
+  actionSearch() {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    void search(view);
+  }
+
+  actionOCR(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const view = this.getView();
+    const plugin = view?.plugin;
+    if (!view || !plugin) {
+      return;
+    }
+    if (!plugin.settings.taskboneEnabled) {
+      new Notice(t("TASKBONE_NOT_ENABLED"), 4000);
+      return;
+    }
+    void plugin.taskbone.getTextForView(view, {
+      forceReScan: isWinCTRLorMacCMD(e),
+    });
+  }
+
+  actionOpenLink(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    const event = new MouseEvent("click", {
+      ctrlKey: e.ctrlKey || !(DEVICE.isIOS || DEVICE.isMacOS),
+      metaKey: e.metaKey || DEVICE.isIOS || DEVICE.isMacOS,
+      shiftKey: e.shiftKey,
+      altKey: e.altKey,
+    });
+    void view.handleLinkClick(event, true);
+  }
+
+  actionOpenLinkProperties() {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    const event = new MouseEvent("click", {
+      ctrlKey: true,
+      metaKey: true,
+      shiftKey: false,
+      altKey: false,
+    });
+    void view.handleLinkClick(event);
+  }
+
+  actionForceSave() {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    void view.forceSave();
+  }
+
+  actionExportLibrary() {
+    const plugin = this.getView()?.plugin;
+    if (!plugin) {
+      return;
+    }
+    void plugin.exportLibrary();
+  }
+
+  actionExportImage() {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    if (!view.exportDialog) {
+      view.exportDialog = new ExportDialog(view.plugin, view, view.file);
+      view.exportDialog.createForm();
+    }
+    view.exportDialog.open();
+  }
+
+  actionOpenAsMarkdown() {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    void view.openAsMarkdown();
+  }
+
+  actionLinkToElement(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    if (isWinALTorMacOPT(e)) {
+      openExternalLink(getYouTubeUrl("yZQoJg2RCKI"), view.app);
+      return;
+    }
+    view.copyLinkToSelectedElementToClipboard(
+      isWinCTRLorMacCMD(e) ? "group=" : isSHIFT(e) ? "area=" : "",
+    );
+  }
+
+  actionAddAnyFile() {
+    const view = this.getView();
+    const plugin = view?.plugin;
+    if (!view || !plugin) {
+      return;
+    }
+    this.props.centerPointer();
+    const insertFileModal = new UniversalInsertFileModal(plugin, view);
+    insertFileModal.open();
+  }
+
+  actionInsertImage() {
+    const view = this.getView();
+    const plugin = view?.plugin;
+    if (!view || !plugin) {
+      return;
+    }
+    this.props.centerPointer();
+    plugin.insertImageDialog.start(view);
+  }
+
+  actionInsertPDF() {
+    const view = this.getView();
+    const plugin = view?.plugin;
+    if (!view || !plugin) {
+      return;
+    }
+    this.props.centerPointer();
+    const insertPDFModal = new InsertPDFModal(plugin, view);
+    insertPDFModal.open();
+  }
+
+  actionInsertMarkdown() {
+    const view = this.getView();
+    const plugin = view?.plugin;
+    if (!view || !plugin) {
+      return;
+    }
+    this.props.centerPointer();
+    plugin.insertMDDialog.start(view);
+  }
+
+  actionInsertBackOfNote() {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    this.props.centerPointer();
+    void view.insertBackOfTheNoteCard();
+  }
+
+  actionInsertLaTeX(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+    if (isWinALTorMacOPT(e)) {
+      openExternalLink(getYouTubeUrl("r08wk-58DPk"), view.app);
+      return;
+    }
+    this.props.centerPointer();
+    insertLaTeXToView(view);
+  }
+
+  actionInsertLink() {
+    const view = this.getView();
+    const plugin = view?.plugin;
+    if (!view || !plugin) {
+      return;
+    }
+    this.props.centerPointer();
+    plugin.insertLinkDialog.start(view.file.path, (text: string) => {
+      void view.addText(text);
+    });
+  }
+
+  actionImportSVG() {
+    const view = this.getView();
+    const plugin = view?.plugin;
+    if (!view || !plugin) {
+      return;
+    }
+    plugin.importSVGDialog.start(view);
+  }
+
+  actionCropImage() {
+    this.getView()?.app.commands.executeCommandById(
+      "obsidian-excalidraw-plugin:crop-image",
+    );
+  }
+
+  async actionRunScript(key: string) {
+    const view = this.getView();
+    const plugin = view?.plugin;
+    if (!view || !plugin) {
+      return;
+    }
+    const f = plugin.app.vault.getAbstractFileByPath(key);
+    if (f && f instanceof TFile) {
+      void plugin.scriptEngine.executeScriptFile(
+        view,
+        f,
+        plugin.scriptEngine.getScriptName(f),
+      );
+    }
+  }
+
+  async actionPinScript(key: string, scriptName: string) {
+    const view = this.getView();
+    const plugin = view?.plugin;
+    if (!view || !plugin) {
+      return;
+    }
+    const api = view.excalidrawAPI;
+    await plugin.loadSettings();
+    const index = plugin.settings.pinnedScripts.indexOf(key);
+    if (index > -1) {
+      plugin.settings.pinnedScripts.splice(index, 1);
+      api?.setToast({
+        message: `Pin removed: ${scriptName}`,
+        duration: 3000,
+        closable: true,
+      });
+    } else {
+      plugin.settings.pinnedScripts.push(key);
+      api?.setToast({
+        message: `Pinned: ${scriptName}`,
+        duration: 3000,
+        closable: true,
+      });
+    }
+    await plugin.saveSettings();
+    getExcalidrawViews(plugin.app, true).forEach((excalidrawView) =>
+      excalidrawView.updatePinnedScripts(),
+    );
+  }
+
+  private islandOnClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    event.preventDefault();
+    if (
+      Math.abs(this.penDownX - this.pos3) > 5 ||
+      Math.abs(this.penDownY - this.pos4) > 5
+    ) {
+      return;
+    }
+    this.setState((prevState: PanelState) => {
+      return {
+        minimized: !prevState.minimized,
+      };
+    });
+  }
+
+  private islandOnPointerDown(event: React.PointerEvent) {
+    const view = this.getView();
+    if (!view) {
+      return;
+    }
+
+    const onDrag = (e: PointerEvent) => {
+      e.preventDefault();
+      this.pos1 = this.pos3 - e.clientX;
+      this.pos2 = this.pos4 - e.clientY;
+      this.pos3 = e.clientX;
+      this.pos4 = e.clientY;
+      this.updatePosition(this.pos2, this.pos1);
+    };
+
+    const onPointerUp = () => {
+      view.ownerDocument?.removeEventListener("pointerup", onPointerUp);
+      view.ownerDocument?.removeEventListener("pointermove", onDrag);
+    };
+
+    event.preventDefault();
+    this.penDownX = this.pos3 = event.clientX;
+    this.penDownY = this.pos4 = event.clientY;
+    view.ownerDocument.addEventListener("pointerup", onPointerUp);
+    view.ownerDocument.addEventListener("pointermove", onDrag);
+  }
+
+  render() {
+    return (
+      <div
+        ref={this.containerRef}
+        className={clsx("excalidraw", "excalidraw-toolsPanel-wrapper", {
+          "theme--dark": this.state.theme === "dark",
+        })}
+      >
+        <div
+          className="Island excalidraw-toolsPanel-island"
+          style={{
+            top: `${this.state.top}px`,
+            left: `${this.state.left}px`,
+            display:
+              this.state.visible && !this.state.excalidrawViewMode
+                ? "block"
+                : "none",
+          }}
+        >
+          <div
+            className="excalidraw-toolsPanel-dragHandle"
+            onClick={(e) => this.islandOnClick(e)}
+            onPointerDown={(e) => this.islandOnPointerDown(e)}
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 228 26"
+            >
+              <path
+                stroke="var(--icon-fill-color)"
+                strokeWidth="2"
+                d="M40,7 h148 M40,13 h148 M40,19 h148"
+              />
+            </svg>
+          </div>
+          <div
+            className="Island App-menu__left scrollbar"
+            style={{
+              display: this.state.minimized ? "none" : "block",
+            }}
+          >
+            <div className="selected-shape-actions">
+              <fieldset>
+                <legend>Utility actions</legend>
+                <div className="buttonList buttonListIcon">
+                  <ActionButton
+                    key={"scriptEngine"}
+                    title={t("INSTALL_SCRIPT_BUTTON")}
+                    action={() => this.actionOpenScriptInstallDialog()}
+                    icon={ICONS.scriptEngine}
+                  />
+                  <ActionButton
+                    key={"release-notes"}
+                    title={t("READ_RELEASE_NOTES")}
+                    action={() => this.actionOpenReleaseNotes()}
+                    icon={ICONS.releaseNotes}
+                  />
+                  <ActionButton
+                    key={"about-excalidraw"}
+                    title={t("ABOUT_EXCALIDRAW")}
+                    action={() => this.actionOpenAboutExcalidraw()}
+                    icon={ICONS.Info}
+                  />
+                  {this.state.isPreviewMode === null ? (
+                    <ActionButton
+                      key={"convert"}
+                      title={t("CONVERT_FILE")}
+                      action={() => this.actionConvertExcalidrawToMD()}
+                      icon={ICONS.convertFile}
+                    />
+                  ) : (
+                    !this.state.isPreviewMode && (
+                      <ActionButton
+                        key={"viewmode"}
+                        title={
+                          this.state.isPreviewMode ? t("PARSED") : t("RAW")
+                        }
+                        action={() => this.actionToggleViewMode()}
+                        icon={
+                          this.state.isPreviewMode
+                            ? ICONS.rawMode
+                            : ICONS.parsedMode
+                        }
+                      />
+                    )
+                  )}
+                  <ActionButton
+                    key={"ui-mode"}
+                    title={t("UI_MODE")}
+                    action={() => this.actionToggleTrayMode()}
+                    icon={ICONS.tray}
+                  />
+                  <ActionButton
+                    key={"fullscreen"}
+                    title={
+                      this.state.isFullscreen
+                        ? t("EXIT_FULLSCREEN")
+                        : t("GOTO_FULLSCREEN")
+                    }
+                    action={() => this.actionToggleFullscreen()}
+                    icon={
+                      this.state.isFullscreen
+                        ? ICONS.exitFullScreen
+                        : ICONS.gotoFullScreen
+                    }
+                  />
+                </div>
+                <div className="buttonList buttonListIcon">
+                  <ActionButton
+                    key={"search"}
+                    title={t("SEARCH")}
+                    action={() => this.actionSearch()}
+                    icon={ICONS.search}
+                  />
+                  <ActionButton
+                    key={"ocr"}
+                    title={t("RUN_OCR")}
+                    action={(e) => this.actionOCR(e)}
+                    icon={ICONS.ocr}
+                  />
+                  <ActionButton
+                    key={"openLink"}
+                    title={t("OPEN_LINK_CLICK")}
+                    action={(e) => this.actionOpenLink(e)}
+                    icon={ICONS.openLink}
+                  />
+                  <ActionButton
+                    key={"openLinkProperties"}
+                    title={t("OPEN_LINK_PROPS")}
+                    action={() => this.actionOpenLinkProperties()}
+                    icon={ICONS.openLinkProperties}
+                  />
+                  <ActionButton
+                    key={"save"}
+                    title={t("FORCE_SAVE")}
+                    action={() => this.actionForceSave()}
+                    icon={saveIcon(this.state.isDirty)}
+                  />
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend>Export actions</legend>
+                <div className="buttonList buttonListIcon">
+                  <ActionButton
+                    key={"lib"}
+                    title={t("DOWNLOAD_LIBRARY")}
+                    action={() => this.actionExportLibrary()}
+                    icon={ICONS.exportLibrary}
+                  />
+                  <ActionButton
+                    key={"exportIMG"}
+                    title={t("EXPORT_IMAGE")}
+                    action={() => this.actionExportImage()}
+                    icon={ICONS.ExportImage}
+                  />
+                  <ActionButton
+                    key={"md"}
+                    title={t("OPEN_AS_MD")}
+                    action={() => this.actionOpenAsMarkdown()}
+                    icon={ICONS.switchToMarkdown}
+                  />
+                  <ActionButton
+                    key={"link-to-element"}
+                    title={t("INSERT_LINK_TO_ELEMENT")}
+                    action={(e) => this.actionLinkToElement(e)}
+                    icon={ICONS.copyElementLink}
+                  />
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend>Insert actions</legend>
+                <div className="buttonList buttonListIcon">
+                  <ActionButton
+                    key={"anyfile"}
+                    title={t("UNIVERSAL_ADD_FILE")}
+                    action={() => this.actionAddAnyFile()}
+                    icon={ICONS["add-file"]}
+                  />
+                  <ActionButton
+                    key={"image"}
+                    title={t("INSERT_IMAGE")}
+                    action={() => this.actionInsertImage()}
+                    icon={ICONS.insertImage}
+                  />
+                  <ActionButton
+                    key={"pdf"}
+                    title={t("INSERT_PDF")}
+                    action={() => this.actionInsertPDF()}
+                    icon={ICONS.insertPDF}
+                  />
+                  <ActionButton
+                    key={"insertMD"}
+                    title={t("INSERT_MD")}
+                    action={() => this.actionInsertMarkdown()}
+                    icon={ICONS.insertMD}
+                  />
+                  <ActionButton
+                    key={"insertBackOfNote"}
+                    title={t("INSERT_CARD")}
+                    action={() => this.actionInsertBackOfNote()}
+                    icon={ICONS.BackOfNote}
+                  />
+                  <ActionButton
+                    key={"latex"}
+                    title={t("INSERT_LATEX")}
+                    action={(e) => this.actionInsertLaTeX(e)}
+                    icon={ICONS.insertLaTeX}
+                  />
+                  <ActionButton
+                    key={"link"}
+                    title={t("INSERT_LINK")}
+                    action={() => this.actionInsertLink()}
+                    icon={ICONS.insertLink}
+                  />
+                  <ActionButton
+                    key={"import-svg"}
+                    title={t("IMPORT_SVG")}
+                    action={() => this.actionImportSVG()}
+                    icon={ICONS.importSVG}
+                  />
+                  <ActionButton
+                    key={"crop-image"}
+                    title={t("CROP_IMAGE")}
+                    action={() => this.actionCropImage()}
+                    icon={ICONS.Crop}
+                  />
+                </div>
+              </fieldset>
+              {this.renderScriptButtons(false)}
+              {this.renderScriptButtons(true)}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  private renderScriptButtons(isDownloaded: boolean) {
+    if (Object.keys(this.state.scriptIconMap).length === 0) {
+      return "";
+    }
+
+    const view = this.getView();
+    const plugin = view?.plugin;
+    if (!view || !plugin) {
+      return null;
+    }
+
+    if (!plugin._loaded) {
+      return null;
+    }
+
+    const downloadedScriptsRoot = `${plugin.settings.scriptFolderPath}/${SCRIPT_INSTALL_FOLDER}/`;
+
+    const filterCondition = (key: string): boolean =>
+      isDownloaded
+        ? key.startsWith(downloadedScriptsRoot)
+        : !key.startsWith(downloadedScriptsRoot);
+
+    if (
+      Object.keys(this.state.scriptIconMap).filter((k) => filterCondition(k))
+        .length === 0
+    ) {
+      return "";
+    }
+
+    const groups = new Set<string>();
+
+    Object.keys(this.state.scriptIconMap)
+      .filter((k) => filterCondition(k))
+      .forEach((k) => groups.add(this.state.scriptIconMap[k].group));
+
+    const scriptlist = Array.from(groups).sort((a, b) => (a > b ? 1 : -1));
+    scriptlist.push(scriptlist.shift());
+    return (
+      <>
+        {scriptlist.map((group, index) => (
+          <fieldset key={`${group}-${index}`}>
+            <legend>
+              {isDownloaded ? group : group === "" ? "User" : `User/${group}`}
+            </legend>
+            <div className="buttonList buttonListIcon">
+              {Object.entries(this.state.scriptIconMap)
+                .filter(([_, v]) => v.group === group)
+                .sort()
+                .map(([key, value]) => (
+                  <ActionButton
+                    key={key}
+                    title={value.name}
+                    action={() => void this.actionRunScript(key)}
+                    longpress={() => void this.actionPinScript(key, value.name)}
+                    icon={new WeakRef(
+                      value.svgString
+                        ? stringToSVG(value.svgString)
+                        : ICONS.cog,
+                    ).deref()}
+                  />
+                ))}
+            </div>
+          </fieldset>
+        ))}
+      </>
+    );
+  }
+}

@@ -1,0 +1,209 @@
+import { ExcalidrawEmbeddableElement } from "@zsviczian/excalidraw/types/element/src/types";
+import {
+  AUDIO_TYPES,
+  DEVICE,
+  VIDEO_TYPES,
+} from "src/constants/constants";
+import {
+  ConstructableWorkspaceSplit,
+  getContainerForDocument,
+  getParentOfClass,
+} from "./obsidianUtils";
+import { App, TFile, WorkspaceLeaf, WorkspaceSplit } from "obsidian";
+import type { LocalGraphView } from "src/types/types";
+import { getLinkParts } from "./sceneDataUtils";
+import ExcalidrawView from "src/view/ExcalidrawView";
+import { setStyle } from "./styleUtils";
+import { log } from "./debugHelper";
+
+declare const mainDocument: Document;
+
+/**
+ * Creates a detached workspace leaf for an embedded view.
+ *
+ * @param view - Excalidraw view that owns the embedded content.
+ * @param doc - Document hosting the embedded UI, which may be a popout window.
+ */
+export const createLeaf = (
+  view: ExcalidrawView,
+  doc: Document = view.ownerDocument,
+): { leaf: WorkspaceLeaf; rootSplit: WorkspaceSplit } => {
+  // Capture stable host objects. Embedded leaves can outlive the originating
+  // ExcalidrawView briefly while Obsidian changes that leaf's view type. The
+  // optional document supports hosts that migrate independently to a popout.
+  const app = view.app;
+  const plugin = view.plugin;
+  const rootSplit: WorkspaceSplit =
+    new (WorkspaceSplit as ConstructableWorkspaceSplit)(
+      app.workspace,
+      "vertical",
+    );
+  rootSplit.getRoot = () =>
+    app.workspace[doc === mainDocument ? "rootSplit" : "floatingSplit"];
+  rootSplit.getContainer = () => getContainerForDocument(doc);
+  setStyle(rootSplit.containerEl, {
+    width: "100%",
+    height: "100%",
+    borderRadius: "var(--embeddable-radius)",
+  });
+  plugin.setDebounceActiveLeafChangeHandler();
+  return {
+    leaf: app.workspace.createLeafInParent(rootSplit, 0),
+    rootSplit,
+  };
+};
+
+export const useDefaultExcalidrawFrame = (
+  element: ExcalidrawEmbeddableElement,
+) => {
+  const link = (element.link ?? "").replace(
+    /^.*?(?=\[\[|https?:\/\/|data:)/,
+    "",
+  );
+  return !(
+    link.startsWith("[") ||
+    link.startsWith("file:") ||
+    link.startsWith("data:")
+  ); // && !link.match(TWITTER_REG);
+};
+
+export const leafMap = new Map<string, WorkspaceLeaf>();
+
+//This is definitely not the right solution, feels like sticking plaster
+//patch disappearing content on mobile
+//based on obsidian app.js, obsidian is looking for activeEditor, but active editor is in a leaf that is disconnected from root
+export const patchMobileView = (
+  view: ExcalidrawView,
+  opts?: { keepAlive?: boolean; isActive?: () => boolean },
+): (() => void) | void => {
+  if (!DEVICE.isMobile) {
+    return;
+  }
+  // log("patching mobile view");
+  const parent = getParentOfClass(view.containerEl, "mod-top");
+  if (parent) {
+    if (!parent.hasClass("mod-visible")) {
+      parent.addClass("mod-visible");
+    }
+    // create observer here
+    const observer = new MutationObserver(() => {
+      if (opts?.keepAlive && opts?.isActive && !opts.isActive()) {
+        observer.disconnect();
+        return;
+      }
+      if (!parent.hasClass("mod-visible")) {
+        parent.addClass("mod-visible");
+      }
+    });
+    observer.observe(parent, { attributes: true, attributeFilter: ["class"] });
+
+    const cleanup = () => observer.disconnect();
+
+    if (opts?.keepAlive) {
+      // Keep the observer alive until caller cleans up (or callback signals inactive)
+      return cleanup;
+    }
+    // default behavior: disconnect after 500ms
+    window.setTimeout(cleanup, 500);
+    return cleanup;
+  }
+};
+
+export const processLinkText = (
+  linkText: string,
+  view: ExcalidrawView,
+): { subpath: string; file: TFile } => {
+  let subpath: string = null;
+
+  if (linkText.search("#") > -1) {
+    const linkParts = getLinkParts(linkText, view.file);
+    subpath = `#${linkParts.isBlockRef ? "^" : ""}${linkParts.ref}`;
+    linkText = linkParts.path;
+  }
+
+  // Resolve existing vault files through Obsidian instead of applying a
+  // cross-platform filename blacklist. Characters such as "?" are valid on
+  // some supported operating systems and may legitimately occur in TFile paths.
+  const file = view.app.metadataCache.getFirstLinkpathDest(
+    linkText,
+    view.file.path,
+  );
+
+  return { subpath, file };
+};
+
+export function setFileToLocalGraph(app: App, file: TFile) {
+  let lgv: LocalGraphView | null = null;
+  app.workspace.iterateAllLeaves((l) => {
+    if (l.view?.getViewType() === "localgraph") {
+      lgv = l.view;
+    }
+  });
+  if (!lgv) {
+    return;
+  }
+  try {
+    if (lgv.loadFile && lgv.file !== file) {
+      lgv.loadFile(file);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export function predictViewType(app: App, file: TFile): string {
+  const ext = file.extension?.toLowerCase?.() ?? "";
+
+  // 1) Try private registry APIs when available (covers .md files with custom views like Kanban)
+  const vr = app.viewRegistry;
+  const registryFileMethods: Array<
+    "getViewTypeForFile" | "getViewTypeByFile" | "getTypeByFile"
+  > = ["getViewTypeForFile", "getViewTypeByFile", "getTypeByFile"];
+  for (const m of registryFileMethods) {
+    if (vr?.[m]) {
+      try {
+        const vt = vr[m](file);
+        if (typeof vt === "string" && vt) {
+          return vt;
+        }
+      } catch (error) {
+        log(error);
+      }
+    }
+  }
+  // 2) Try extension mapping from registry
+  const registryExtMethods: Array<
+    "getViewTypeByExtension" | "getTypeByExtension"
+  > = ["getViewTypeByExtension", "getTypeByExtension"];
+  for (const m of registryExtMethods) {
+    if (vr?.[m]) {
+      try {
+        const vt = vr[m](ext);
+        if (typeof vt === "string" && vt) {
+          return vt;
+        }
+      } catch (error) {
+        log(error);
+      }
+    }
+  }
+
+  // 3) Fallbacks by extension
+  if (ext === "md") {
+    return "markdown";
+  }
+  if (ext === "pdf") {
+    return "pdf";
+  }
+  if (ext === "canvas") {
+    return "canvas";
+  }
+  if (AUDIO_TYPES.contains(ext)) {
+    return "audio";
+  }
+  if (VIDEO_TYPES.contains(ext)) {
+    return "video";
+  }
+
+  return "empty";
+}

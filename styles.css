@@ -1,0 +1,2724 @@
+.excalidraw-wrapper {
+  height: 100%;
+  margin: 0px;
+  background-color: var(--background-primary);
+  position: relative;
+}
+
+.excalidraw-code-block {
+  box-sizing: border-box;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  color: var(--excalidraw-code-foreground);
+  background: var(--excalidraw-code-background);
+  border: 1px solid var(--excalidraw-code-border);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+  font-family: var(--font-monospace);
+}
+
+.excalidraw-code-block__header {
+  min-width: 0;
+  display: flex;
+  flex: 0 0 30px;
+  align-items: center;
+  gap: 5px;
+  padding: 0 7px;
+  color: var(--excalidraw-code-foreground);
+  background: transparent;
+  border-bottom: 1px solid var(--excalidraw-code-border);
+  user-select: none;
+}
+
+.excalidraw-code-block__label {
+  color: var(--excalidraw-code-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.excalidraw-code-block__language {
+  min-width: 0;
+  max-width: 100%;
+  flex-shrink: 1;
+  text-overflow: ellipsis;
+  width: auto;
+  height: 22px;
+  margin: 0;
+  padding: 0 20px 0 4px;
+  color: var(--excalidraw-code-foreground) !important;
+  -webkit-text-fill-color: var(--excalidraw-code-foreground) !important;
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 4px;
+  font-family: var(--font-interface);
+  font-size: 11.5px;
+}
+
+.excalidraw-code-block__language:hover,
+.excalidraw-code-block__language:focus,
+.excalidraw-code-block__language:focus-visible,
+.excalidraw-code-block__language:active {
+  color: var(--excalidraw-code-foreground) !important;
+  -webkit-text-fill-color: var(--excalidraw-code-foreground) !important;
+  background-color: var(--excalidraw-code-surface) !important;
+  border-color: var(--excalidraw-code-border) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.excalidraw-code-block__language option {
+  color: var(--excalidraw-code-foreground) !important;
+  -webkit-text-fill-color: var(--excalidraw-code-foreground) !important;
+  background: var(--excalidraw-code-contrast-background) !important;
+}
+
+.excalidraw-code-block__autocomplete {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  height: 20px;
+  margin-left: auto;
+  padding: 0 5px;
+  color: var(--excalidraw-code-muted) !important;
+  -webkit-text-fill-color: var(--excalidraw-code-muted) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 4px;
+  box-shadow: none !important;
+  font-family: var(--font-interface);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.excalidraw-code-block__autocomplete:hover,
+.excalidraw-code-block__autocomplete:focus-visible {
+  color: var(--excalidraw-code-foreground) !important;
+  -webkit-text-fill-color: var(--excalidraw-code-foreground) !important;
+  background: var(--excalidraw-code-surface) !important;
+  border-color: var(--excalidraw-code-border) !important;
+  outline: none !important;
+}
+
+.excalidraw-code-block__status {
+  width: 5px;
+  height: 5px;
+  background: var(--excalidraw-code-muted);
+  border-radius: 50%;
+}
+
+.excalidraw-code-block__autocomplete[aria-pressed="true"]
+  .excalidraw-code-block__status {
+  background: var(--excalidraw-code-function);
+}
+
+.excalidraw-code-block__editor {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.excalidraw-code-block__editor .cm-editor {
+  height: 100%;
+  color: var(--excalidraw-code-foreground);
+  background: transparent;
+  font-family: var(--font-monospace);
+  font-size: 14px;
+}
+
+.excalidraw-code-block__editor .cm-scroller {
+  overflow: auto;
+  font-family: inherit;
+  line-height: 1.55;
+}
+
+.excalidraw-code-block__editor .cm-content {
+  color: var(--excalidraw-code-foreground) !important;
+  padding: 10px 0 16px;
+  caret-color: var(--excalidraw-code-foreground);
+}
+
+/* Obsidian and its themes also style CodeMirror. Keep this editor's text
+   independent, including unclassified identifiers and WebKit text fill. */
+.excalidraw-code-block .cm-editor .cm-content,
+.excalidraw-code-block .cm-editor .cm-line,
+.excalidraw-code-block .cm-editor .cm-line span {
+  color: var(--excalidraw-code-foreground) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+.excalidraw-code-block .cm-editor .cm-line .excalidraw-code-token-comment {
+  color: var(--excalidraw-code-comment) !important;
+}
+.excalidraw-code-block .cm-editor .cm-line .excalidraw-code-token-keyword {
+  color: var(--excalidraw-code-keyword) !important;
+}
+.excalidraw-code-block .cm-editor .cm-line .excalidraw-code-token-type {
+  color: var(--excalidraw-code-type) !important;
+}
+.excalidraw-code-block .cm-editor .cm-line .excalidraw-code-token-function {
+  color: var(--excalidraw-code-function) !important;
+}
+.excalidraw-code-block .cm-editor .cm-line .excalidraw-code-token-string {
+  color: var(--excalidraw-code-string) !important;
+}
+.excalidraw-code-block .cm-editor .cm-line .excalidraw-code-token-value {
+  color: var(--excalidraw-code-value) !important;
+}
+.excalidraw-code-block .cm-editor .cm-line .excalidraw-code-token-meta {
+  color: var(--excalidraw-code-meta) !important;
+}
+
+.excalidraw-code-block .cm-cursor,
+.excalidraw-code-block .cm-dropCursor {
+  border-left-color: var(--excalidraw-code-foreground) !important;
+}
+
+.excalidraw-code-block .cm-tooltip {
+  color: var(--excalidraw-code-foreground);
+  background: var(--excalidraw-code-contrast-background);
+  border-color: var(--excalidraw-code-border);
+}
+
+.excalidraw-code-block .cm-tooltip-autocomplete ul li[aria-selected] {
+  color: var(--excalidraw-code-foreground);
+  background: var(--excalidraw-code-active-line);
+}
+
+.excalidraw-code-block[data-active="false"] .cm-activeLine,
+.excalidraw-code-block[data-active="false"] .cm-activeLineGutter {
+  background: transparent;
+}
+
+.excalidraw-code-block__editor .cm-line {
+  color: var(--excalidraw-code-foreground);
+}
+
+.excalidraw-code-block__editor .cm-matchingBracket,
+.excalidraw-code-block__editor .cm-nonmatchingBracket {
+  color: var(--excalidraw-code-foreground) !important;
+}
+
+.excalidraw-code-block__editor .cm-gutters {
+  color: var(--excalidraw-code-muted);
+  background: var(--excalidraw-code-background);
+  border-right: 1px solid var(--excalidraw-code-border);
+}
+
+.excalidraw-code-block__editor .cm-activeLine,
+.excalidraw-code-block__editor .cm-activeLineGutter {
+  background: var(--excalidraw-code-active-line);
+}
+
+.excalidraw-code-block__editor .cm-selectionBackground,
+.excalidraw-code-block__editor .cm-content ::selection {
+  background: var(--excalidraw-code-selection) !important;
+}
+
+.excalidraw-code-block__editor .cm-focused {
+  outline: none;
+}
+
+.block-language-excalidraw {
+  text-align: center;
+}
+
+svg.excalidraw-svg {
+  width: 100%;
+}
+
+.excalidraw-embedded-img {
+  width: 100%;
+}
+
+.excalidraw-svg-right-wrap {
+  float: right;
+  margin: 0px 0px 20px 20px;
+  width: 100%;
+}
+
+.excalidraw-svg-left-wrap {
+  float: left;
+  margin: 0px 35px 20px 0px;
+  width: 100%;
+}
+
+.excalidraw-svg-right {
+  float: right;
+}
+
+.excalidraw-svg-center {
+  text-align: center;
+  margin: auto;
+  width: 100%;
+}
+
+.excalidraw-svg-left {
+  float: left;
+}
+
+div.excalidraw-svg-right,
+div.excalidraw-svg-left {
+  display: table;
+  width: 100%;
+}
+
+button.ToolIcon_type_button[title="Export"] {
+  display: none;
+}
+
+.excalidraw-prompt-div {
+  display: flex;
+  max-width: 800px;
+}
+
+.excalidraw-prompt-form {
+  display: flex;
+  flex-grow: 1;
+}
+
+.excalidraw-prompt-input {
+  flex-grow: 1;
+}
+
+.excalidraw-latex-suite-suggestion {
+  padding: 0.8em;
+  margin-bottom: 1em;
+  background-color: var(--background-secondary-alt);
+  border-left: 4px solid var(--text-accent);
+  border-radius: 4px;
+}
+
+.excalidraw-latex-suite-suggestion p {
+  margin: 0;
+}
+
+.excalidraw-prompt-button {
+  width: 9em;
+}
+
+.excalidraw-export-button {
+  width: 9em;
+  margin-left: 10px;
+}
+
+.excalidraw-prompt-buttons-div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+}
+
+.excalidraw-export-buttons-div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: right;
+  margin-top: 1em;
+}
+
+.ex-coffee-div {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.excalidraw-mastery-promo {
+  margin: 0 auto 1rem;
+  width: calc(100% - 1.6em);
+  max-width: calc(100% - 1.6em);
+  box-sizing: border-box;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    var(--background-secondary),
+    var(--background-primary)
+  );
+}
+
+.excalidraw-mastery-promo__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  cursor: pointer;
+  font-size: var(--font-ui-smaller);
+  font-weight: var(--font-medium);
+  list-style: revert;
+}
+
+.excalidraw-mastery-promo__summary-title {
+  color: var(--text-normal);
+  font-size: var(--font-ui-smaller);
+  font-weight: var(--font-medium);
+}
+
+.excalidraw-mastery-promo__summary-title.is-hidden {
+  visibility: hidden;
+}
+
+.excalidraw-mastery-promo__summary-state {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.excalidraw-mastery-promo__content {
+  display: grid;
+  grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  margin-top: 0.85rem;
+}
+
+.excalidraw-mastery-promo__image-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.excalidraw-mastery-promo__image {
+  display: block;
+  width: 100%;
+  max-width: 8rem;
+  height: auto;
+}
+
+.excalidraw-mastery-promo__text p {
+  margin: 0 0 0.7rem;
+  line-height: 1.5;
+}
+
+.excalidraw-mastery-promo__text p:last-child {
+  margin-bottom: 0;
+}
+
+.excalidraw-mastery-promo__text a {
+  font-weight: var(--font-semibold);
+}
+
+.excalidraw-mastery-promo.is-collapsed {
+  padding-bottom: 0.35rem;
+}
+
+@media (max-width: 600px) {
+  .excalidraw-mastery-promo__content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .excalidraw-mastery-promo__image {
+    max-width: 7rem;
+  }
+}
+
+.excalidraw-scriptengine-install td > img {
+  width: 100%;
+  max-width: 800px;
+}
+
+.excalidraw-scriptengine-install img.coffee {
+  width: 130px;
+}
+
+.excalidraw-scriptengine-install tr {
+  vertical-align: top;
+}
+
+.excalidraw-scriptengine-install table {
+  max-width: 130ch;
+}
+
+.excalidraw-scriptengine-install td.label {
+  min-width: 11ch;
+  font-weight: bold;
+  padding-right: 5px;
+}
+
+.excalidraw-scriptengine-install td.data {
+  width: 100%;
+}
+
+.excalidraw-scriptengine-install .modal-content {
+  max-width: 130ch;
+  user-select: text;
+}
+
+.excalidraw-scriptengine-install .modal {
+  max-height: 90%;
+  width: auto;
+}
+
+.excalidraw-prompt-center {
+  text-align: center;
+}
+
+.excalidraw-prompt-center button {
+  margin: 0 10px;
+}
+
+.excalidraw-prompt-center.filepath {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 2em;
+}
+
+.excalidraw-dirty {
+  color: var(--text-error);
+}
+
+.workspace-leaf-content .excalidraw-view {
+  padding: 0px 1px;
+  /*1px so on ipad swipe in from left and right still works*/
+  overflow: hidden;
+}
+
+.excalidraw-videoWrapper {
+  max-width: 600px;
+}
+
+.excalidraw-videoWrapper.settings {
+  max-width: 340px;
+}
+
+.excalidraw-videoWrapper div {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  margin: 0 auto;
+}
+
+.excalidraw-videoWrapper.settings iframe {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.excalidraw-videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.excalidraw-release .modal-content {
+  padding-right: 5px;
+  margin-right: -5px;
+  user-select: text;
+}
+
+.excalidraw-release .modal {
+  max-height: 80%;
+  max-width: 42em;
+}
+
+.excalidraw-scriptengine-install tbody > tr > td > div > img {
+  height: 20px;
+  background-color: silver;
+  padding: 2px;
+}
+
+.excalidraw-scriptengine-install tbody > tr > td > div {
+  width: 50px;
+  display: inline-block;
+}
+
+.excalidraw-release p > a > img {
+  width: 100%;
+}
+
+.excalidraw-colorpicker-overlay {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 9998;
+}
+
+.excalidraw-colorpicker-popup {
+  position: absolute;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  z-index: 9999;
+  scrollbar-gutter: stable both-edges;
+}
+
+.excalidraw-colorpicker-grid {
+  display: grid;
+  overflow-y: auto;
+  padding-right: 4px;
+  max-height: 260px;
+}
+
+.excalidraw-colorpicker-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--interactive-accent-hover);
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+textarea.excalidraw-wysiwyg {
+  border: none;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.is-tablet .excalidraw button,
+.is-mobile .excalidraw button {
+  padding: initial;
+  height: 1.8rem;
+}
+
+.excalidraw-display-flex {
+  display: flex;
+}
+
+.excalidraw-settings input[type="text"] {
+  min-width: 10em;
+}
+
+.excalidraw-folder-path-control {
+  flex-wrap: wrap;
+}
+
+.excalidraw-file-and-folder-selector__field {
+  flex-wrap: wrap;
+}
+
+.excalidraw-file-and-folder-selector__field > .setting-item-control {
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.excalidraw-file-and-folder-selector__field input[type="text"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+}
+
+.is-mobile .excalidraw-file-and-folder-selector .setting-item-control {
+  flex: 0 0 auto;
+}
+
+.excalidraw-folder-create-row {
+  display: flex;
+  flex: 0 0 100%;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.excalidraw-folder-create-row > button:not(.excalidraw-display-none) {
+  margin-top: var(--size-2-2);
+}
+
+.excalidraw-ai-provider-table {
+  margin: auto;
+  width: 80%;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--background-primary-alt);
+}
+
+.excalidraw-ai-provider-table > .setting-item {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.excalidraw-ai-provider-table__header {
+  padding-left: 1rem;
+  border-bottom: 2px solid var(--background-modifier-border-hover);
+  background: color-mix(
+    in srgb,
+    var(--background-secondary) 82%,
+    var(--background-modifier-hover) 18%
+  );
+}
+
+.excalidraw-ai-provider-table__row {
+  padding-left: 1rem;
+  min-height: 0;
+}
+
+.excalidraw-ai-provider-table__row + .excalidraw-ai-provider-table__row {
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.excalidraw-ai-provider-table__row .setting-item-info,
+.excalidraw-ai-provider-table__header .setting-item-info {
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
+}
+
+.excalidraw-ai-provider-table__row .setting-item-name,
+.excalidraw-ai-provider-table__header .setting-item-name {
+  margin-bottom: 0.1rem;
+}
+
+.excalidraw-ai-provider-table__row .setting-item-description,
+.excalidraw-ai-provider-table__header .setting-item-description {
+  line-height: 1.3;
+}
+
+.excalidraw-ai-provider-table__row .setting-item-control,
+.excalidraw-ai-provider-table__header .setting-item-control {
+  gap: 0.35rem;
+  padding-left: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .excalidraw-ai-provider-table {
+    margin-left: 0.2rem;
+  }
+
+  .excalidraw-ai-provider-table__row,
+  .excalidraw-ai-provider-table__header {
+    padding-left: 0.15rem;
+  }
+}
+
+div.excalidraw-draginfo {
+  position: absolute;
+  z-index: 1000;
+  color: var(--text-normal);
+  padding: 3px;
+  background: var(--color-base-40);
+  display: block;
+  border-radius: 5px;
+}
+
+.excalidraw-sidepanel-container {
+  height: 100%;
+}
+
+.excalidraw-sidepanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100%;
+}
+
+.excalidraw-sidepanel__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  padding: var(--size-4-2) var(--size-4-2);
+  border-bottom: 1px solid
+    var(--divider-color, var(--background-modifier-border));
+  background-color: var(--background-secondary);
+}
+
+.excalidraw-sidepanel__select {
+  flex: 1;
+}
+
+.excalidraw-sidepanel__empty {
+  padding: 0.75rem;
+  color: var(--text-muted);
+}
+
+.excalidraw-sidepanel__body {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--background-primary);
+}
+
+.excalidraw-sidepanel-tab {
+  display: none;
+  flex-direction: column;
+  height: 100%;
+}
+
+.excalidraw-sidepanel-tab.is-active {
+  display: flex;
+}
+
+.excalidraw-sidepanel-tab__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.excalidraw-sidepanel-tab__content {
+  flex: 1;
+  overflow: auto;
+  padding: 0.5rem;
+}
+
+.excalidraw-sidepanel-tab__button {
+  /* probably unused */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.excalidraw-sidepanel-tab__button.is-active {
+  background: var(--background-primary-alt, var(--background-secondary));
+  color: var(--text-normal);
+}
+
+.excalidraw-sidepanel-tab__button:hover {
+  background: var(--background-primary-alt, var(--background-secondary));
+}
+
+.excalidraw-sidepanel-tab__icon {
+  display: inline-flex;
+}
+
+.excalidraw-sidepanel-tab__icon.is-hidden {
+  display: none;
+}
+
+.excalidraw-sidepanel-tab__close {
+  border: none;
+  background: transparent;
+  color: inherit;
+  display: inline-flex;
+  padding: 0.1rem;
+  border-radius: 4px;
+}
+
+.excalidraw-sidepanel-tab__close:hover {
+  background: var(--background-modifier-hover);
+}
+
+.excalidraw-sidepanel-tab__close.is-hidden {
+  display: none;
+}
+
+.excalidraw .embeddable-menu {
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  display: block;
+  z-index: var(--zIndex-canvasButtons);
+  transition: opacity var(--anim-duration-fast) ease-in-out;
+
+  /* slower fadeout */
+  &[style*="opacity: 0.2;"] {
+    transition-duration: var(--anim-duration-moderate);
+  }
+}
+
+.excalidraw-image-wrapper {
+  text-align: center;
+}
+
+.excalidraw-image-wrapper img {
+  margin: auto;
+}
+
+.modal-content.excalidraw-scriptengine-install .hit-count {
+  margin-left: 0.5em;
+  white-space: nowrap;
+  font-size: smaller;
+}
+
+.modal-content.excalidraw-scriptengine-install .active-highlight {
+  border: 2px solid var(--color-accent-2);
+  background-color: var(--color-accent);
+}
+
+.excalidraw-svg svg a {
+  text-decoration: none;
+}
+
+summary.excalidraw-setting-h1 {
+  font-variant: var(--h1-variant);
+  letter-spacing: -0.015em;
+  line-height: var(--h1-line-height);
+  font-size: var(--h1-size);
+  color: var(--h1-color);
+  font-weight: var(--h1-weight);
+  font-style: var(--h1-style);
+  font-family: var(--h1-font);
+  /*margin-block-start: var(--p-spacing);*/
+  margin-block-end: var(--p-spacing);
+}
+
+summary.excalidraw-setting-h3 {
+  font-variant: var(--h3-variant);
+  letter-spacing: -0.015em;
+  line-height: var(--h3-line-height);
+  font-size: var(--h3-size);
+  color: var(--h3-color);
+  font-weight: var(--h3-weight);
+  font-style: var(--h3-style);
+  font-family: var(--h3-font);
+  margin-block-start: var(--p-spacing);
+  margin-block-end: var(--p-spacing);
+}
+
+/* Modifier key settings column headers */
+.modifier-key-header-row {
+  padding-block: 2px;
+  min-height: unset;
+  border-top: none;
+}
+
+.modifier-key-col-header {
+  display: inline-flex;
+  width: var(--toggle-width, 40px);
+  justify-content: center;
+  font-size: var(--font-smallest);
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+  letter-spacing: 0.03em;
+}
+
+summary.excalidraw-setting-h4 {
+  font-variant: var(--h4-variant);
+  letter-spacing: -0.015em;
+  line-height: var(--h4-line-height);
+  font-size: var(--h4-size);
+  color: var(--h4-color);
+  font-weight: var(--h4-weight);
+  font-style: var(--h4-style);
+  font-family: var(--h4-font);
+  margin-block-start: var(--p-spacing);
+  margin-block-end: var(--p-spacing);
+}
+
+hr.excalidraw-setting-hr {
+  margin: 1rem 0rem 0rem 0rem;
+}
+
+img.excalidraw-cropped-pdfpage,
+.excalidraw-cropped-pdfpage svg {
+  background-color: white;
+}
+
+.excalidraw .pdf-toolbar,
+.excalidraw .pdf-container {
+  width: 100%;
+}
+
+.ex-opacity-30 {
+  opacity: 0.3;
+}
+
+.ex-opacity-15 {
+  opacity: 0.15;
+}
+
+.ex-opacity-8 {
+  opacity: 0.08;
+}
+
+.ex-opacity-5 {
+  opacity: 0.05;
+}
+
+.ex-opacity-0 {
+  opacity: 0;
+}
+
+.popover .excalidraw-svg {
+  width: 100%;
+  max-width: inherit;
+  height: 100%;
+  max-height: inherit;
+}
+
+root {
+  --excalidraw-caret-color: initial;
+}
+
+.ex-setting-actions-container svg {
+  margin-right: 8px;
+  height: 30px;
+  width: 30px;
+}
+
+.excalidraw-rank {
+  text-align: center;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.excalidraw-rank svg {
+  height: 8rem;
+  width: 8rem;
+}
+
+.excalidraw-setting-desc {
+  padding: 10px;
+  cursor: pointer;
+  background-color: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 5px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.excalidraw-setting-desc:hover {
+  background-color: var(--background-modifier-hover);
+  color: var(--text-accent);
+}
+
+.excalidraw-release .nav-buttons-container {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--background-modifier-border);
+}
+
+.excalidraw-release .nav-button {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.excalidraw-release .nav-button.is-active {
+  border-bottom: 2px solid var(--interactive-accent);
+  margin-bottom: -2px;
+}
+
+.excalidraw-prompt-buttonbar-top,
+.excalidraw-prompt-buttonbar-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  /* keep both rows top‐aligned */
+  row-gap: 0.5em;
+  /* vertical space when wrapped */
+}
+
+/* top bar specifics */
+.excalidraw-prompt-buttonbar-top {
+  padding: 0.5em 0;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+/* bottom bar specifics */
+.excalidraw-prompt-buttonbar-bottom {
+  margin-top: 1rem;
+}
+
+/* make each child a flex row */
+.excalidraw-prompt-buttonbar-top > div,
+.excalidraw-prompt-buttonbar-bottom > div {
+  display: flex;
+}
+
+/* push the first group to the left */
+.excalidraw-prompt-buttonbar-top > div:first-child,
+.excalidraw-prompt-buttonbar-bottom > div:first-child {
+  margin-right: auto;
+}
+
+/* push the second group to the right */
+.excalidraw-prompt-buttonbar-top > div:last-child,
+.excalidraw-prompt-buttonbar-bottom > div:last-child {
+  margin-left: auto;
+}
+
+.excalidraw-search.document-search-container {
+  display: flex;
+  flex-direction: column;
+  background: var(--background-secondary);
+  border-radius: 8px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+  padding: 0.5em 0.8em;
+  margin-bottom: 0.5em;
+  max-width: calc(100% - 1.6em);
+  position: sticky;
+  top: 0;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.excalidraw-search .document-search {
+  align-items: center;
+  align-self: center;
+}
+
+.excalidraw-search .search-input-container.document-search-input {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  background: var(--background-primary);
+  border-radius: 6px;
+  border: 1px solid var(--background-modifier-border);
+  min-width: 0;
+}
+
+.excalidraw-search .search-input-container .clickable-icon {
+  display: flex;
+  align-items: center;
+  color: var(--text-faint);
+}
+
+.excalidraw-search .search-input-container input[type="text"] {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-normal);
+  font-size: 1em;
+  flex: 1 1 auto;
+  padding: 0.1em 2em;
+  margin: 0;
+}
+
+.excalidraw-search .document-search-count {
+  margin-left: 0.5em;
+  color: var(--text-faint);
+  font-size: 0.95em;
+  white-space: nowrap;
+  min-width: 3.5em;
+  text-align: right;
+}
+
+.excalidraw-search .document-search-buttons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.excalidraw-search .document-search-button {
+  background: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  padding: 0.1em 0.2em;
+  margin: 0 1px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-faint);
+  transition: background 0.15s;
+  height: 2em;
+  width: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.excalidraw-search .document-search-button:hover,
+.excalidraw-search .document-search-button:focus {
+  background: var(--background-modifier-hover);
+  color: var(--text-accent);
+}
+
+.excalidraw-search .document-search-button svg {
+  width: 1.3em;
+  height: 1.3em;
+  stroke: currentColor;
+  fill: none;
+  pointer-events: none;
+}
+
+.excalidraw-filetype-tag {
+  order: 99;
+}
+
+.excalidraw-mobile-navbar-docked {
+  position: relative;
+}
+
+.is-mobile
+  .excalidraw.excalidraw--mobile
+  .FixedSideContainer.FixedSideContainer_side_top.App-top-bar {
+  margin-top: 1rem;
+}
+
+/*
+Obsidian Sheets Plus support
+*/
+.excalidraw__embeddable__outer .lj-content-view {
+  width: var(--embeddable-width);
+  height: var(--embeddable-height);
+}
+
+.excalidraw__embeddable__outer #sheet-box {
+  height: calc(var(--embeddable-height) - var(--lj-toolbar-height) + 40px);
+}
+
+.excalidraw__embeddable__outer .lj-univer .univer-relative.univer-grid {
+  width: var(--embeddable-width);
+}
+
+/*
+End Obsidian Sheets Plus support
+*/
+
+/* fixes: https://github.com/zsviczian/obsidian-excalidraw-plugin/issues/2789 */
+.excalidraw:not(.excalidraw--tray) .HintViewer {
+  position: absolute;
+}
+
+.excalidraw-button-bgcolor {
+  &-normal {
+    background-color: var(--interactive-normal);
+    color: var(--text-normal);
+  }
+
+  &-accent {
+    background-color: var(--interactive-accent);
+    color: var(--text-on-accent);
+  }
+
+  &-success {
+    background-color: var(--interactive-success);
+    color: var(--text-on-success);
+  }
+}
+
+.excalidraw-copylinkprompt-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 0.5em;
+}
+
+.excalidraw-pdfexportsettings-colorinput {
+  width: 50px;
+  margin-left: 10px;
+}
+
+.excalidraw-genericInputPrompt-specialCharPopup {
+  position: absolute;
+  z-index: 1000;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 4px;
+  box-shadow: 0 2px 8px var(--background-modifier-box-shadow);
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 200px;
+}
+
+.excalidraw-genericInputPrompt-specialCharButton {
+  margin: 2px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  background: var(--interactive-normal);
+  border: none;
+  border-radius: 4px;
+}
+
+.excalidraw-multiOptionConfirmationPrompt-message {
+  margin-bottom: 1em;
+}
+
+.excalidraw-multiOptionConfirmationPrompt-buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.excalidraw-commandLinkOptInPrompt-buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1em;
+}
+
+.excalidraw-commandLinkOptInPrompt-denyButton {
+  margin-right: 0.5em;
+}
+
+.excalidraw-insertpdf-infolabel {
+  min-width: 2.3em;
+  text-align: right;
+}
+
+.excalidraw-loading {
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 1.5em;
+}
+
+.excalidraw-versionmismatch-buttonbar {
+  gap: 0.5em;
+  margin-top: 1em;
+}
+
+.excalidraw-toolsPanel-wrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  touch-action: none;
+}
+
+.excalidraw-toolsPanel-island {
+  /* 
+    Width calculation: 
+    - 5 buttons: (var(--default-button-size) * 5)
+    - 4 column gaps of 0.25rem: 1rem
+    - standard left/right panel padding: ~1.5rem (0.75rem each side)
+    - plus a tiny 0.1rem buffer to prevent accidental wrapping 
+  */
+  width: calc((var(--default-button-size) * 5) + 3rem);
+
+  height: fit-content;
+  max-height: 400px;
+  z-index: 5;
+}
+
+.excalidraw-toolsPanel-dragHandle {
+  height: 26px;
+  width: 100%;
+  cursor: move;
+}
+
+.excalidraw .Island.App-menu__left {
+  scrollbar-width: none;
+}
+
+.excalidraw.excalidraw-toolsPanel-wrapper .Island.App-menu__left.scrollbar {
+  max-height: 350px;
+  width: initial;
+  --padding: 0.125rem;
+}
+
+/* Ensure tool buttons remain perfectly square and sized just like native Excalidraw.
+   This overrides the old '18%' rule which was stretching the buttons. */
+.excalidraw
+  .Island.excalidraw-toolsPanel-island
+  .buttonList
+  > .ToolIcon_type_button,
+.excalidraw .Island.excalidraw-toolsPanel-island .buttonList > .ToolIcon,
+.excalidraw .Island.excalidraw-toolsPanel-island .buttonList > label {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+/* Replicate the EXACT native Excalidraw property panel layout */
+.excalidraw
+  .Island.excalidraw-toolsPanel-island
+  .selected-shape-actions
+  .buttonList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  /* Use standard gap shorthand: row-gap(0.5rem) column-gap(0.25rem). 
+     This perfectly matches the native panel spacing and avoids linter warnings! */
+  gap: 0.5rem 0.25rem;
+}
+
+.excalidraw .App-tray-menu {
+  min-width: calc(6 * var(--default-button-size));
+}
+
+/* Radix portals the canvas menu under the owning document's body. Keep it on
+   Obsidian's menu layer so body-level Obsidian tooltips remain above it. */
+body > [data-radix-portal] .main-menu {
+  z-index: var(--layer-menu);
+}
+
+.excalidraw-pen-settings-floating-actions {
+  position: sticky;
+  bottom: -20px;
+  margin-bottom: -20px;
+  padding-bottom: 20px;
+  padding-top: 15px;
+  background-color: var(--background-primary);
+  border-top: 1px solid var(--background-modifier-border);
+  z-index: 10;
+}
+
+.excalidraw-pen-settings-floating-actions .setting-item {
+  border-top: none;
+  padding: 0;
+}
+
+/* Editable Markdown images */
+.excalidraw-markdown-image-editor {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  min-height: 100%;
+  box-sizing: border-box;
+  container-name: excalidraw-markdown-image-editor;
+  container-type: inline-size;
+}
+
+.excalidraw-markdown-image-editor button > svg.svg-icon {
+  width: var(--icon-m);
+  min-width: var(--icon-m);
+  height: var(--icon-m);
+}
+
+.excalidraw-markdown-image-editor__toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-4-2);
+  flex-wrap: wrap;
+  margin: -4px -4px 0;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-primary);
+}
+
+.excalidraw-markdown-image-editor__toolbar .clickable-icon {
+  flex: 0 0 auto;
+}
+
+.excalidraw-markdown-image-editor__toolbar [hidden] {
+  display: none;
+}
+
+.excalidraw-markdown-image-editor__owner {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.excalidraw-markdown-image-editor__status {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  white-space: nowrap;
+}
+
+.excalidraw-markdown-image-editor__status.is-updating::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-inline-end: 6px;
+  border-radius: 50%;
+  background: var(--interactive-accent);
+  animation: excalidraw-markdown-image-pulse 1s ease-in-out infinite;
+}
+
+@keyframes excalidraw-markdown-image-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.excalidraw .excalidraw-selected-element-menu .Island {
+  position: relative;
+  display: flex;
+}
+
+.excalidraw .excalidraw-selected-element-menu.is-hidden {
+  display: none;
+}
+
+.excalidraw-markdown-image-editor__source,
+.excalidraw-markdown-image-editor__appearance {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary-alt);
+  padding: 0 12px;
+}
+
+.excalidraw-markdown-image-editor__transclusion-toggle {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary-alt);
+  padding: 12px;
+}
+
+.excalidraw-markdown-image-editor__section-description {
+  margin: 4px 0 10px;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.excalidraw-markdown-image-editor__source:empty {
+  display: none;
+}
+
+.excalidraw-markdown-image-editor__section-title {
+  margin: 14px 0 4px;
+  color: var(--text-normal);
+  font-size: var(--font-ui-medium);
+}
+
+.excalidraw-markdown-image-editor__markdown-view {
+  position: relative;
+  width: 100%;
+  flex: 0 0 auto;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-primary);
+  box-sizing: border-box;
+}
+
+.excalidraw-markdown-image-editor__markdown-view > .workspace-split,
+.excalidraw-markdown-image-editor__markdown-view .workspace-leaf,
+.excalidraw-markdown-image-editor__markdown-view .workspace-leaf-content {
+  height: 100%;
+  min-height: 0;
+}
+
+.excalidraw-markdown-image-editor__editor-resize-handle {
+  position: relative;
+  z-index: 2;
+  height: 12px;
+  flex: 0 0 12px;
+  cursor: row-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.excalidraw-markdown-image-editor__editor-resize-handle::before {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 40px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--background-modifier-border-hover);
+  content: "";
+  transform: translateX(-50%);
+}
+
+.excalidraw-markdown-image-editor__editor-resize-handle:hover::before,
+.excalidraw-markdown-image-editor__editor-resize-handle:focus-visible::before {
+  background: var(--interactive-accent);
+}
+
+.excalidraw-markdown-fragment-view .inline-title {
+  display: none;
+}
+
+.excalidraw-markdown-image-editor__number-input {
+  width: 76px;
+  min-width: 64px;
+  max-width: 100%;
+  flex: 0 1 76px;
+}
+
+.excalidraw-markdown-image-editor__appearance
+  .setting-item-control
+  input[type="range"] {
+  min-width: 80px;
+  max-width: 100%;
+  flex: 1 1 160px;
+}
+
+.excalidraw-markdown-image-editor__source .setting-item,
+.excalidraw-markdown-image-editor__appearance .setting-item,
+.excalidraw-markdown-image-editor__transclusion-toggle {
+  min-width: 0;
+}
+
+.excalidraw-markdown-image-editor__source .setting-item-info,
+.excalidraw-markdown-image-editor__appearance .setting-item-info,
+.excalidraw-markdown-image-editor__transclusion-toggle .setting-item-info {
+  min-width: 0;
+}
+
+.excalidraw-markdown-image-editor__source .setting-item-control,
+.excalidraw-markdown-image-editor__appearance .setting-item-control,
+.excalidraw-markdown-image-editor__transclusion-toggle .setting-item-control {
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+}
+
+.excalidraw-markdown-image-editor__source .setting-item-control > *,
+.excalidraw-markdown-image-editor__appearance .setting-item-control > *,
+.excalidraw-markdown-image-editor__transclusion-toggle
+  .setting-item-control
+  > * {
+  max-width: 100%;
+}
+
+.excalidraw-markdown-image-editor__source
+  .setting-item-control
+  input[type="text"],
+.excalidraw-markdown-image-editor__appearance
+  .setting-item-control
+  input[type="text"] {
+  min-width: min(100px, 100%);
+  flex: 1 1 140px;
+}
+
+.excalidraw-markdown-image-editor__setting--color
+  > .setting-item-control
+  > input[type="text"] {
+  width: 0;
+  min-width: min(72px, 100%);
+  flex: 1 1 96px;
+}
+
+.excalidraw-markdown-image-editor__setting--border > .setting-item-control {
+  min-width: min(200px, 100%);
+  flex: 1 1 200px;
+  flex-wrap: nowrap;
+}
+
+.excalidraw-markdown-image-editor__setting--border {
+  flex-wrap: wrap;
+}
+
+.excalidraw-markdown-image-editor__setting--border > .setting-item-info {
+  flex: 1 1 96px;
+}
+
+.excalidraw-markdown-image-editor__setting--border
+  > .setting-item-control
+  > input[type="text"] {
+  width: 0;
+  min-width: 48px;
+  flex: 1 1 64px;
+}
+
+.excalidraw-markdown-image-editor__source .setting-item-control select,
+.excalidraw-markdown-image-editor__appearance .setting-item-control select,
+.excalidraw-markdown-image-editor__appearance
+  .setting-item-control
+  .excalidraw-font-picker {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.excalidraw-markdown-image-editor__source
+  .setting-item-control
+  input[type="color"],
+.excalidraw-markdown-image-editor__appearance
+  .setting-item-control
+  input[type="color"] {
+  width: var(--input-height, 32px);
+  min-width: var(--input-height, 32px);
+  max-width: var(--input-height, 32px);
+  height: var(--input-height, 32px);
+  flex: 0 0 var(--input-height, 32px);
+  align-self: center;
+}
+
+.excalidraw-markdown-image-editor__source .setting-item-control button,
+.excalidraw-markdown-image-editor__appearance .setting-item-control button,
+.excalidraw-markdown-image-editor__transclusion-toggle
+  .setting-item-control
+  button,
+.excalidraw-markdown-image-editor__source .setting-item-control .clickable-icon,
+.excalidraw-markdown-image-editor__appearance
+  .setting-item-control
+  .clickable-icon {
+  width: auto;
+  flex: 0 0 auto;
+  align-self: center;
+}
+
+.excalidraw-markdown-image-editor__setting--color
+  > .setting-item-control
+  > button,
+.excalidraw-markdown-image-editor__setting--color
+  > .setting-item-control
+  > .clickable-icon {
+  width: var(--input-height, 32px);
+  min-width: var(--input-height, 32px);
+  max-width: var(--input-height, 32px);
+  flex: 0 0 var(--input-height, 32px);
+}
+
+.excalidraw-markdown-image-editor
+  button.excalidraw-markdown-image-editor__compact-button {
+  --icon-size: var(--icon-m);
+  width: var(--input-height, 32px);
+  min-width: var(--input-height, 32px);
+  max-width: var(--input-height, 32px);
+  flex: 0 0 var(--input-height, 32px);
+}
+
+.excalidraw-markdown-image-editor__setting--font > .setting-item-control select,
+.excalidraw-markdown-image-editor__setting--font
+  > .setting-item-control
+  .excalidraw-font-picker {
+  width: min(240px, 100%);
+}
+
+@container excalidraw-markdown-image-editor (max-width: 560px) {
+  .excalidraw-markdown-image-editor__setting--wide,
+  .excalidraw-markdown-image-editor__transclusion-toggle {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--size-4-2);
+  }
+
+  .excalidraw-markdown-image-editor__setting--wide > .setting-item-info,
+  .excalidraw-markdown-image-editor__setting--wide > .setting-item-control,
+  .excalidraw-markdown-image-editor__transclusion-toggle > .setting-item-info,
+  .excalidraw-markdown-image-editor__transclusion-toggle
+    > .setting-item-control {
+    width: 100%;
+  }
+
+  .excalidraw-markdown-image-editor__setting--wide > .setting-item-control,
+  .excalidraw-markdown-image-editor__transclusion-toggle
+    > .setting-item-control {
+    justify-content: flex-start;
+  }
+}
+
+@container excalidraw-markdown-image-editor (max-width: 300px) {
+  .excalidraw-markdown-image-editor__source > .setting-item,
+  .excalidraw-markdown-image-editor__appearance > .setting-item,
+  .excalidraw-markdown-image-editor__transclusion-toggle {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--size-4-2);
+  }
+
+  .excalidraw-markdown-image-editor__source
+    > .setting-item
+    > .setting-item-info,
+  .excalidraw-markdown-image-editor__source
+    > .setting-item
+    > .setting-item-control,
+  .excalidraw-markdown-image-editor__appearance
+    > .setting-item
+    > .setting-item-info,
+  .excalidraw-markdown-image-editor__appearance
+    > .setting-item
+    > .setting-item-control,
+  .excalidraw-markdown-image-editor__transclusion-toggle > .setting-item-info,
+  .excalidraw-markdown-image-editor__transclusion-toggle
+    > .setting-item-control {
+    width: 100%;
+  }
+
+  .excalidraw-markdown-image-editor__source
+    > .setting-item
+    > .setting-item-control,
+  .excalidraw-markdown-image-editor__appearance
+    > .setting-item
+    > .setting-item-control,
+  .excalidraw-markdown-image-editor__transclusion-toggle
+    > .setting-item-control {
+    justify-content: flex-start;
+  }
+
+  .excalidraw-markdown-image-editor__setting--font
+    > .setting-item-control
+    select,
+  .excalidraw-markdown-image-editor__setting--font
+    > .setting-item-control
+    .excalidraw-font-picker {
+    width: 100%;
+  }
+
+  .excalidraw-markdown-image-editor__setting--border > .setting-item-info,
+  .excalidraw-markdown-image-editor__setting--border > .setting-item-control {
+    flex: 0 0 auto;
+  }
+
+  .excalidraw-markdown-image-editor__setting--border > .setting-item-control {
+    flex-wrap: wrap;
+  }
+}
+
+.excalidraw-markdown-image-editor__css-setting {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.excalidraw-markdown-image-editor__css-setting .setting-item-info {
+  width: 100%;
+}
+
+.excalidraw-markdown-image-editor__css-setting .setting-item-control {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.excalidraw-markdown-image-editor__css-editor {
+  width: 100%;
+  min-width: 0;
+  height: 220px;
+  min-height: 140px;
+  max-height: 60vh;
+  flex: 1 1 auto;
+  overflow: hidden;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--input-radius);
+  background: var(--code-background, var(--background-primary));
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.excalidraw-markdown-image-editor__css-editor .cm-editor {
+  width: 100%;
+  height: 100%;
+  color: var(--code-normal, var(--text-normal));
+  background: transparent;
+  font-family: var(--font-monospace);
+  font-size: var(--font-ui-small);
+  caret-color: var(--caret-color);
+  direction: ltr;
+  text-align: left;
+}
+
+.excalidraw-markdown-image-editor__css-editor .cm-scroller {
+  overflow: auto;
+  font-family: inherit;
+  line-height: 1.45;
+}
+
+.excalidraw-markdown-image-editor__css-editor .cm-content {
+  padding-block: 8px;
+  direction: ltr;
+  text-align: left;
+}
+
+.excalidraw-markdown-image-editor__css-editor .cm-line {
+  padding-inline: 8px 12px;
+  direction: ltr;
+  text-align: left;
+}
+
+.excalidraw-markdown-image-editor__css-editor .cm-gutters {
+  border-inline-end: 1px solid var(--background-modifier-border);
+  color: var(--text-muted);
+  background: var(--code-background, var(--background-secondary));
+}
+
+.excalidraw-markdown-image-editor__css-editor .cm-activeLine,
+.excalidraw-markdown-image-editor__css-editor .cm-activeLineGutter {
+  background: var(--background-modifier-hover);
+}
+
+.excalidraw-markdown-image-editor__css-editor:focus-within {
+  border-color: var(--background-modifier-border-focus);
+  box-shadow: 0 0 0 2px var(--background-modifier-border-focus);
+}
+
+.excalidraw-markdown-image-editor__css-editor .cm-editor.cm-focused {
+  outline: none;
+}
+
+.excalidraw-markdown-image-editor__css-setting button {
+  flex: 0 0 auto;
+}
+
+.excalidraw-markdown-image-editor__css-actions {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  direction: ltr;
+}
+
+.excalidraw-markdown-image-editor__css-actions > button,
+.excalidraw-markdown-image-editor__css-actions > .clickable-icon {
+  width: var(--input-height, 32px);
+  min-width: var(--input-height, 32px);
+  max-width: var(--input-height, 32px);
+  height: var(--input-height, 32px);
+  flex: 0 0 var(--input-height, 32px);
+}
+
+.excalidraw-markdown-image-editor
+  button.excalidraw-markdown-image-editor__css-action-button {
+  --icon-size: var(--icon-m);
+  width: var(--input-height, 32px);
+  min-width: var(--input-height, 32px);
+  max-width: var(--input-height, 32px);
+  height: var(--input-height, 32px);
+  flex: 0 0 var(--input-height, 32px);
+}
+
+.excalidraw-markdown-image-editor__placeholder {
+  margin: auto;
+  max-width: 28em;
+  padding: 32px 20px;
+  border: 1px dashed var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+button.excalidraw-font-picker {
+  display: flex;
+  align-items: center;
+  width: min(240px, 100%);
+  min-width: 0;
+  max-width: 100%;
+  text-align: start;
+}
+
+.excalidraw-font-picker__label {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.excalidraw-font-picker__option {
+  display: block;
+  min-width: min(12rem, calc(100vw - 4rem));
+  max-width: calc(100vw - 4rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-ui-medium);
+}
+
+.excalidraw-font-picker-menu-opening .menu,
+.menu.excalidraw-font-picker-menu--desktop {
+  max-height: min(420px, 60vh);
+  overflow-y: auto;
+}
+
+.setting-item.excalidraw-declarative-full-width {
+  display: block;
+  width: 100%;
+}
+
+.excalidraw-declarative-settings-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--size-4-2) var(--size-4-3);
+  margin-bottom: var(--size-4-1);
+  font-size: var(--font-ui-smaller);
+}
+
+.excalidraw-declarative-settings-toolbar button,
+.excalidraw-declarative-settings-toolbar a {
+  white-space: nowrap;
+}
+
+.excalidraw-declarative-settings-toolbar button {
+  font-size: inherit;
+}
+
+.excalidraw-declarative-settings-toolbar a {
+  color: var(--text-accent);
+  text-decoration: none;
+}
+
+.excalidraw-declarative-settings-toolbar a:hover {
+  color: var(--text-accent-hover);
+  text-decoration: underline;
+}
+
+.excalidraw-settings-breadcrumbs {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--size-4-1);
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+
+.excalidraw-settings-breadcrumbs__link {
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-accent);
+  cursor: pointer;
+  font-size: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+.excalidraw-settings-breadcrumbs__link:hover {
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-accent-hover);
+  text-decoration: underline;
+}
+
+.excalidraw-settings-breadcrumbs__link.is-disabled {
+  color: var(--text-muted);
+  cursor: default;
+  pointer-events: none;
+}
+
+.is-mobile .excalidraw-settings-breadcrumbs__link,
+.is-tablet .excalidraw-settings-breadcrumbs__link {
+  min-height: var(--interactive-normal);
+  padding-inline: var(--size-2-2);
+}
+
+.excalidraw-settings-breadcrumbs__current {
+  color: var(--text-normal);
+  font-weight: var(--font-semibold);
+}
+
+.excalidraw-settings-breadcrumbs__separator {
+  color: var(--text-faint);
+}
+
+.excalidraw-settings .setting-item-description a[href^="#"],
+.excalidraw-settings-page .setting-item-description a[href^="#"] {
+  color: var(--text-accent);
+  font-weight: var(--font-medium);
+  text-decoration: underline;
+}
+
+.excalidraw-settings .setting-item-description a[href^="#"]:hover,
+.excalidraw-settings-page .setting-item-description a[href^="#"]:hover {
+  color: var(--text-accent-hover);
+}
+
+.excalidraw-filename-information {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.8fr) minmax(18rem, 1.2fr);
+  gap: var(--size-4-4);
+  align-items: start;
+}
+
+.excalidraw-filename-information > :first-child {
+  min-width: 0;
+}
+
+@media (max-width: 700px) {
+  .excalidraw-filename-information {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Community Script Store */
+.excalidraw-script-store .modal {
+  width: min(1100px, 96vw);
+  max-width: 1100px;
+  height: min(900px, 92vh);
+  max-height: 92vh;
+}
+
+.excalidraw-script-store .modal-content {
+  max-width: none;
+  user-select: text;
+}
+
+.excalidraw-script-store__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+.excalidraw-script-store__loading {
+  min-height: 16rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--text-muted);
+}
+
+.excalidraw-script-store__loading-icon svg {
+  animation: excalidraw-script-store-spin 1s linear infinite;
+}
+
+@keyframes excalidraw-script-store-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.excalidraw-script-store__support-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-l);
+  background: var(--background-secondary);
+  overflow: hidden;
+}
+
+.excalidraw-script-store__support-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.65rem 0.85rem;
+  color: var(--text-normal);
+  text-decoration: none;
+}
+
+.excalidraw-script-store__support-item
+  + .excalidraw-script-store__support-item {
+  border-left: 1px solid var(--background-modifier-border);
+}
+
+.excalidraw-script-store__support-item:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+  text-decoration: none;
+}
+
+.excalidraw-script-store__support-logo {
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.excalidraw-script-store__support-icon {
+  flex: 0 0 2.75rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--interactive-accent);
+}
+
+.excalidraw-script-store__support-icon svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.excalidraw-script-store__support-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.excalidraw-script-store__support-text strong {
+  font-size: var(--font-ui-medium);
+}
+
+.excalidraw-script-store__support-text span {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+
+.excalidraw-script-store__scripting-promo {
+  width: 100%;
+}
+
+.excalidraw-script-store__scripting-link {
+  display: block;
+  width: min(900px, 100%);
+  margin: 0 auto;
+  color: var(--text-normal);
+  text-decoration: none;
+}
+
+.excalidraw-script-store__scripting-link:hover {
+  color: var(--interactive-accent);
+  text-decoration: none;
+}
+
+.excalidraw-script-store__scripting-banner {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  object-fit: cover;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-l);
+}
+
+.excalidraw-script-store__scripting-caption {
+  padding: 0.45rem 0.5rem 0;
+  text-align: center;
+  font-size: var(--font-ui-small);
+  font-weight: var(--font-semibold);
+}
+
+.excalidraw-script-store__updates {
+  padding: 0.9rem;
+  border: 1px solid var(--interactive-accent);
+  border-radius: var(--radius-l);
+  background: var(--background-secondary);
+}
+
+.excalidraw-script-store__updates-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.excalidraw-script-store__updates h2,
+.excalidraw-script-store__browse-header h2 {
+  margin: 0;
+}
+
+.excalidraw-script-store__updates p,
+.excalidraw-script-store__browse-header p {
+  margin: 0.2rem 0 0;
+  color: var(--text-muted);
+}
+
+.excalidraw-script-store__inline-icon {
+  display: inline-flex;
+  margin-left: 0.45rem;
+  vertical-align: text-bottom;
+}
+
+.excalidraw-script-store__inline-icon svg {
+  width: 1em;
+  height: 1em;
+}
+
+.excalidraw-script-store__update-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.excalidraw-script-store__update-chip {
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-s);
+  font-size: var(--font-ui-smaller);
+}
+
+.excalidraw-script-store__browse-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.excalidraw-script-store__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.excalidraw-script-store__search {
+  position: relative;
+  flex: 1 1 18rem;
+  min-width: 12rem;
+}
+
+.excalidraw-script-store__search > span {
+  position: absolute;
+  left: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  color: var(--text-faint);
+  pointer-events: none;
+}
+
+.excalidraw-script-store__search svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.excalidraw-script-store__search input {
+  width: 100%;
+  padding-left: 2rem;
+}
+
+.excalidraw-script-store__controls select {
+  min-width: 12rem;
+}
+
+.excalidraw-script-store__view-toggle {
+  display: flex;
+}
+
+.excalidraw-script-store__view-toggle button {
+  border-radius: 0;
+}
+
+.excalidraw-script-store__view-toggle button:first-child {
+  border-radius: var(--button-radius) 0 0 var(--button-radius);
+}
+
+.excalidraw-script-store__view-toggle button:last-child {
+  border-radius: 0 var(--button-radius) var(--button-radius) 0;
+}
+
+.excalidraw-script-store__view-toggle button.is-active {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.excalidraw-script-store__result-summary {
+  margin-bottom: 0.55rem;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+
+.excalidraw-script-store__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 0.7rem;
+}
+
+.excalidraw-script-store__card {
+  display: flex;
+  flex-direction: column;
+  min-height: 15rem;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-primary);
+  overflow: hidden;
+  transition:
+    border-color var(--anim-duration-fast) ease-in-out,
+    transform var(--anim-duration-fast) ease-in-out;
+}
+
+.excalidraw-script-store__card:hover {
+  border-color: var(--background-modifier-border-hover);
+  transform: translateY(-1px);
+}
+
+.excalidraw-script-store__card.has-update {
+  border-color: var(--interactive-accent);
+}
+
+.excalidraw-script-store__card-main {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.9rem;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  color: var(--text-normal);
+  text-align: left;
+  white-space: normal;
+  cursor: pointer;
+}
+
+.excalidraw-script-store__card-main:hover {
+  background: var(--background-modifier-hover);
+}
+
+.excalidraw-script-store__icon {
+  position: relative;
+  flex: 0 0 3.1rem;
+  width: 3.1rem;
+  height: 3.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+  overflow: hidden;
+}
+
+.excalidraw-script-store__icon img {
+  position: relative;
+  z-index: 1;
+  width: 2.55rem;
+  height: 2.55rem;
+  object-fit: contain;
+}
+
+/* Script icons are external SVG images and cannot inherit --icon-fill-color
+ * like the inline SVGs in the Excalidraw tools panel. Match Excalidraw's
+ * dark-theme image treatment (THEME_FILTER) so monochrome script icons stay
+ * legible on dark store backgrounds. */
+.theme-dark .excalidraw-script-store__icon img,
+.theme-dark .excalidraw-script-store__detail-icon img {
+  filter: invert(93%) hue-rotate(180deg) saturate(1.25);
+}
+
+.excalidraw-script-store__icon img.is-hidden,
+.excalidraw-script-store__detail-icon img.is-hidden {
+  display: none;
+}
+
+.excalidraw-script-store__icon-fallback,
+.excalidraw-script-store__detail-icon-fallback {
+  position: absolute;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.excalidraw-script-store__icon-fallback.is-visible,
+.excalidraw-script-store__detail-icon-fallback.is-visible {
+  display: flex;
+}
+
+.excalidraw-script-store__card-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.excalidraw-script-store__title-row {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.excalidraw-script-store__title-row h3 {
+  flex: 1 1 10rem;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--font-ui-medium);
+  line-height: 1.25;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.excalidraw-script-store__author {
+  margin-top: 0.15rem;
+  color: var(--text-faint);
+  font-size: var(--font-ui-smaller);
+}
+
+.excalidraw-script-store__card-text p {
+  display: -webkit-box;
+  margin: 0.55rem 0 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  line-height: 1.45;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
+
+.excalidraw-script-store__badge,
+.excalidraw-script-store__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.12rem 0.4rem;
+  border-radius: var(--radius-s);
+  background: var(--background-secondary-alt);
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  font-weight: var(--font-medium);
+}
+
+.excalidraw-script-store__badge svg {
+  width: 0.85em;
+  height: 0.85em;
+}
+
+.excalidraw-script-store__badge.has-update,
+.excalidraw-script-store__badge.is-featured {
+  color: var(--interactive-accent);
+}
+
+.excalidraw-script-store__card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 3.2rem;
+  padding: 0.65rem 0.8rem;
+  border-top: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+}
+
+.excalidraw-script-store__card-footer > span {
+  min-width: 0;
+  color: var(--text-faint);
+  font-size: var(--font-ui-smaller);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.excalidraw-script-store__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 15rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.excalidraw-script-store__empty h3 {
+  margin-bottom: 0;
+}
+
+.excalidraw-script-store__back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.excalidraw-script-store__back svg {
+  width: 1em;
+  height: 1em;
+}
+
+.excalidraw-script-store__detail {
+  width: min(800px, 100%);
+  margin: 0 auto;
+}
+
+.excalidraw-script-store__detail-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.excalidraw-script-store__detail-icon {
+  position: relative;
+  flex: 0 0 5rem;
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-l);
+  background: var(--background-secondary);
+  color: var(--text-muted);
+  overflow: hidden;
+}
+
+.excalidraw-script-store__detail-icon img {
+  position: absolute;
+  width: 4.2rem;
+  height: 4.2rem;
+  object-fit: contain;
+  background: var(--background-secondary);
+}
+
+.excalidraw-script-store__detail-title {
+  min-width: 0;
+  flex: 1;
+}
+
+.excalidraw-script-store__detail-title h1 {
+  margin: 0;
+}
+
+.excalidraw-script-store__detail-byline {
+  margin-top: 0.25rem;
+  color: var(--text-muted);
+}
+
+.excalidraw-script-store__detail-tags,
+.excalidraw-script-store__detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+
+.excalidraw-script-store__local-management {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+}
+
+.excalidraw-script-store__local-management h2 {
+  margin: 0 0 0.8rem;
+  font-size: var(--font-ui-medium);
+}
+
+.excalidraw-script-store__local-copy + .excalidraw-script-store__local-copy {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.excalidraw-script-store__local-copy-label {
+  width: fit-content;
+  margin-bottom: 0.5rem;
+  padding: 0.12rem 0.4rem;
+  border-radius: var(--radius-s);
+  background: var(--background-primary-alt);
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  font-weight: var(--font-medium);
+}
+
+.excalidraw-script-store__local-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.excalidraw-script-store__local-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.excalidraw-script-store__local-info code {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.excalidraw-script-store__local-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.4rem;
+}
+
+.excalidraw-script-store__local-note {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: var(--radius-s);
+  background: var(--background-primary-alt);
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  line-height: 1.4;
+}
+
+.excalidraw-script-store__group-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.excalidraw-script-store__group-row > label {
+  flex: 0 0 auto;
+  font-weight: var(--font-medium);
+}
+
+.excalidraw-script-store__group-controls {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.excalidraw-script-store__group-controls select {
+  min-width: 10rem;
+  max-width: 15rem;
+}
+
+.excalidraw-script-store__group-controls input {
+  min-width: 8rem;
+  flex: 1 1 auto;
+}
+
+.excalidraw-script-store__detail-description {
+  margin-top: 1rem;
+  line-height: 1.55;
+}
+
+.excalidraw-script-store__detail-description img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-m);
+}
+
+@media (max-width: 700px) {
+  .excalidraw-script-store__support-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .excalidraw-script-store__support-item
+    + .excalidraw-script-store__support-item {
+    border-left: 0;
+    border-top: 1px solid var(--background-modifier-border);
+  }
+
+  .excalidraw-script-store__updates-header,
+  .excalidraw-script-store__detail-hero,
+  .excalidraw-script-store__local-row,
+  .excalidraw-script-store__group-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .excalidraw-script-store__local-actions button {
+    flex: 1 1 auto;
+  }
+
+  .excalidraw-script-store__group-controls {
+    flex-wrap: wrap;
+  }
+
+  .excalidraw-script-store__group-controls select,
+  .excalidraw-script-store__group-controls input {
+    max-width: none;
+    flex: 1 1 12rem;
+  }
+
+  .excalidraw-script-store__controls > select,
+  .excalidraw-script-store__view-toggle {
+    flex: 1 1 auto;
+  }
+
+  .excalidraw-script-store__view-toggle button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 500px) {
+  .excalidraw-script-store .modal {
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+  }
+
+  .excalidraw-script-store__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .excalidraw-script-store__controls {
+    align-items: stretch;
+  }
+
+  .excalidraw-script-store__controls > select,
+  .excalidraw-script-store__view-toggle {
+    width: 100%;
+  }
+}

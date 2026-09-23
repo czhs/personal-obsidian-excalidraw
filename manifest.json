@@ -1,0 +1,12 @@
+{
+  "id": "obsidian-excalidraw-plugin",
+  "name": "Excalidraw Codeblocks",
+  "version": "2.28.0-codeblocks.1",
+  "minAppVersion": "1.8.7",
+  "description": "A personal Excalidraw fork with live, syntax-highlighted code blocks.",
+  "author": "Zsolt Viczian",
+  "authorUrl": "https://community.sketch-your-mind.com/em",
+  "fundingUrl": "https://ko-fi.com/zsolt",
+  "helpUrl": "https://github.com/czhs/personal-obsidian-excalidraw#readme",
+  "isDesktopOnly": false
+}
