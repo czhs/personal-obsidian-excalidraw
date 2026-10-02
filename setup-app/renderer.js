@@ -76,7 +76,6 @@ function render() {
   );
   $("#archive-count").textContent = data.archived.length;
   $("#archive-note").hidden = filter !== "archive";
-  $(".welcome").hidden = filter === "archive";
   $("#all-count").textContent = data.vaults.length;
   $("#custom-count").textContent = custom.length;
   $("#upgrade-count").textContent = upgrade.length;
@@ -112,7 +111,7 @@ function render() {
           "All vaults");
   renderFolders();
   $("#result-count").textContent =
-    `${visible.length} ${visible.length === 1 ? "space" : "spaces"}`;
+    `${visible.length} ${visible.length === 1 ? "vault" : "vaults"}`;
   const gallery = $("#gallery");
   gallery.replaceChildren();
   visible.forEach((vault) => {
@@ -164,8 +163,8 @@ function render() {
           toast(
             result.message ||
               (result.status === "closed"
-                ? "Your editor will load when you open this vault."
-                : "Editor reloaded. Your drawing is ready."),
+                ? "Loads next time the vault opens."
+                : "Editor reloaded."),
             result.status === "pending",
           );
         } finally {
@@ -224,14 +223,14 @@ function render() {
         ? "Nothing archived yet."
         : filter === "upgrade"
           ? "All caught up."
-          : "Your next idea starts here.";
+          : "No vaults yet.";
     empty.querySelector("p").textContent = query
       ? "Try another name or folder."
       : filter === "archive"
-        ? "Vaults you archive will appear here, ready to restore."
+        ? "Archived vaults appear here."
         : filter === "upgrade"
-          ? "Add an existing vault whenever you’re ready."
-          : "Create a vault or add an existing one to your gallery.";
+          ? "Every vault has the current build."
+          : "Create a vault or add an existing one.";
     gallery.append(empty);
   }
   if (filter === "all" && !query) {
@@ -263,9 +262,9 @@ async function install(request) {
         result.reload?.message ||
         (request.mode === "upgrade"
           ? result.reload?.status === "reloaded"
-            ? "Upgraded and reloaded. Your custom editor is ready."
-            : "Upgraded. Your custom editor will load when you open this vault."
-          : "Your vault is ready. Open it in Obsidian and allow community plugins if prompted."),
+            ? "Upgraded and reloaded."
+            : "Upgraded. Loads next time the vault opens."
+          : "Vault created. Allow community plugins in Obsidian if prompted."),
     );
   } finally {
     setWorking(false);
@@ -295,7 +294,7 @@ $("#create-form").addEventListener("submit", async (event) => {
   if (working) return;
   $("#form-error").textContent = "";
   if (!parent) {
-    $("#form-error").textContent = "Choose a location for your new vault.";
+    $("#form-error").textContent = "Choose a location.";
     return;
   }
   $("#create-submit").textContent = "Creating…";
@@ -461,7 +460,7 @@ $("#confirm-remove").addEventListener("click", () => {
     () => window.vaults.remove(editingVault.path),
     "#manage-dialog",
     "#manage-error",
-    "Moved to Archive. Restore it anytime; all files are still on your Mac.",
+    "Archived. Files are untouched.",
   );
 });
 $("#folder-form").addEventListener("submit", (event) => {
@@ -562,7 +561,7 @@ $("#upload-cover").addEventListener("click", async () => {
     if (await window.vaults.uploadCover(coverVault.path)) {
       await refresh();
       $("#cover-dialog").close();
-      toast("Cover saved on your Mac.");
+      toast("Cover saved.");
     }
   } catch (error) {
     $("#cover-error").textContent = error.message;

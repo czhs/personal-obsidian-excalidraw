@@ -85,7 +85,7 @@ export function createCoverBrowser({ selectedVault, apply }) {
     }
     loading = true;
     error();
-    $("#photo-status").textContent = "Finding your next cover…";
+    $("#photo-status").textContent = "Searching…";
     $("#photo-more").hidden = true;
     try {
       const result = await window.vaults.unsplashSearch(query, next);

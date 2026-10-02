@@ -11,13 +11,13 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="titlebar"><span>YOUR PERSONAL DRAWING SPACE</span></div>
+    <div class="titlebar"></div>
     <aside class="sidebar">
       <div class="brand">
         <img src="assets/mark.svg" alt="" />
         <div>Excalidraw<span>VAULTS</span></div>
       </div>
-      <div class="nav-label">WORKSPACE</div>
+      <div class="nav-label">VAULTS</div>
       <nav aria-label="Vault filters">
         <button class="nav-item selected" data-filter="all">
           <span class="nav-icon">▦</span>All vaults<span
@@ -69,63 +69,26 @@
         <div id="folder-list"></div>
       </section>
       <div class="sidebar-bottom">
-        <div class="local-dot"></div>
-        Local by design
-        <p>Your vaults stay on your Mac.</p>
-        <div class="bundle-label">CUSTOM EXCALIDRAW</div>
-        <div id="bundle-version">Loading bundle…</div>
+        <div class="bundle-label">PLUGIN BUILD</div>
+        <div id="bundle-version">Loading…</div>
       </div>
     </aside>
     <main>
       <header>
-        <div>
-          <div class="eyebrow">A LITTLE SPACE FOR BIG IDEAS</div>
-          <h1>Your vaults<span>.</span></h1>
-          <p>One home for your drawings, notes, and code.</p>
-        </div>
+        <h1>Vaults</h1>
         <div class="header-actions">
-          <button class="secondary" id="new-post">
-            <span>✎</span> New blog post</button
+          <button class="secondary" id="add-existing">Add existing</button
+          ><button class="secondary" id="new-post">New blog post</button
           ><button class="primary" id="new-vault">
             <span>＋</span> New vault
           </button>
         </div>
       </header>
-      <section class="welcome">
-        <div>
-          <span class="tag">MADE FOR YOUR WORKFLOW</span>
-          <h2>A familiar canvas.<br />A few more possibilities.</h2>
-          <p>
-            Your custom Excalidraw, with editable code blocks.<br />Bring an
-            existing vault or start with a blank page.
-          </p>
-          <button class="text-button" id="add-existing">
-            Add an existing vault <span>↗</span>
-          </button>
-        </div>
-        <div class="hero-art" aria-hidden="true">
-          <div class="art-dots"></div>
-          <div class="art-note">
-            <span>an idea</span
-            ><svg viewBox="0 0 120 50"><path d="M8 25q25-30 50 0t50 0" /></svg>
-            <div class="sketch-square"></div>
-            <div class="sketch-circle"></div>
-          </div>
-          <div class="art-code">
-            <div class="code-dots">● ● ●</div>
-            <code
-              ><i>def</i> make_space():<br />&nbsp; ideas = <b>[]</b
-              ><br />&nbsp; <i>return</i> possibilities</code
-            >
-          </div>
-          <div class="art-spark">✳</div>
-        </div>
-      </section>
       <section class="library">
         <div class="library-heading">
           <div>
             <h2 id="section-title">All vaults</h2>
-            <span id="result-count">Loading your spaces…</span>
+            <span id="result-count">Loading…</span>
           </div>
           <div class="library-tools">
             <label class="search"
@@ -152,15 +115,11 @@
         <div id="warning" class="warning" hidden></div>
         <div id="gallery" class="gallery" aria-live="polite"></div>
       </section>
-      <footer>
-        <span>One click backs up, upgrades, and reloads your editor.</span
-        ><span class="footer-mark">MAKE ROOM FOR IDEAS ↗</span>
-      </footer>
     </main>
     <dialog id="create-dialog">
       <form id="create-form">
         <div class="modal-top">
-          <img src="assets/mark.svg" alt="" /><button
+          <span></span><button
             type="button"
             class="icon-button"
             id="close-dialog"
@@ -169,13 +128,12 @@
             ×
           </button>
         </div>
-        <div class="eyebrow">A FRESH START</div>
-        <h2>Create your next space.</h2>
-        <p>A new Obsidian vault, with your custom Excalidraw ready to go.</p>
+        <h2>New vault</h2>
+        <p>Creates an Obsidian vault with the custom Excalidraw installed.</p>
         <label class="field"
           >Vault name<input
             id="vault-name"
-            placeholder="My drawing studio"
+            placeholder="Vault name"
             maxlength="160"
             required
             autocomplete="off" /></label
@@ -231,7 +189,7 @@
           ><button class="secondary">Move</button>
         </div>
         <p class="form-note">
-          Organizes your cards. Files stay where they are.
+          Groups the card. Files don’t move.
         </p>
       </form>
       <div class="removal-section">
@@ -252,7 +210,7 @@
     </dialog>
     <dialog id="cover-dialog" aria-labelledby="cover-title">
       <div class="modal-top">
-        <div class="eyebrow">MAKE IT YOURS</div>
+        <div class="eyebrow">COVER</div>
         <button
           class="icon-button"
           data-close="cover-dialog"
@@ -261,7 +219,7 @@
           ×
         </button>
       </div>
-      <h2 id="cover-title">Choose a cover.</h2>
+      <h2 id="cover-title">Cover</h2>
       <p id="cover-vault"></p>
       <div class="cover-tools">
         <button class="primary" id="upload-cover">Upload image ↗</button>
@@ -325,7 +283,7 @@
         </div>
         <div id="unsplash-connect" class="unsplash-connect">
           <div class="eyebrow">AN ENTIRE WORLD OF COVERS</div>
-          <h3>Connect your Unsplash library.</h3>
+          <h3>Connect Unsplash</h3>
           <p>
             Search photos and preview them on your vault card. Create an
             Unsplash developer application, then paste its Access Key here once.
@@ -397,7 +355,7 @@
           </button>
         </div>
         <h2 id="folder-title">New folder</h2>
-        <p>Group related vaults. Their locations on your Mac stay the same.</p>
+        <p>Groups vault cards. Files don’t move.</p>
         <label class="field"
           >Folder name<input
             id="folder-name"
@@ -471,7 +429,7 @@
             <path d="M67 83h40" opacity=".4" />
             <circle cx="37" cy="33" r="9" fill="#f7f7ed" />
             <path d="m140 90 11-14 5 4-11 14-7 3Z" fill="#f7f7ed" /></svg
-          ><span class="art-label">A SPACE TO CREATE</span>
+          >
         </div>
         <div class="card-body">
           <div class="card-title-row">
@@ -501,8 +459,7 @@
     ></template>
     <template id="add-template"
       ><button class="add-card">
-        <span>＋</span><strong>A new space</strong
-        ><small>Start with a blank canvas</small>
+        <span>＋</span><strong>New vault</strong>
       </button></template
     >
     <script src="renderer.js" type="module"></script>
