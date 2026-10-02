@@ -31,7 +31,7 @@ try {
   const [file] = await readdir(posts);
   assert.match(file, /^\d{4}-\d{2}-\d{2}-untitled\.md$/);
   const text = await readFile(path.join(posts, file), "utf8");
-  assert.match(text, /^---\nlayout: post\ntitle: \ndate: \d{4}-\d{2}-\d{2} \d{2}:\d{2}:00[+-]\d{4}\ndescription: \ntags: \n/);
+  assert.match(text, /^---\nlayout: post\ntitle:  # e\.g\. .+\ndate: \d{4}-\d{2}-\d{2} \d{2}:\d{2}:00[+-]\d{4} # .+\ndescription:  # .+\ntags:  # .+\ncategories:  # .+\n/);
   assert.match(text, /published: false/);
   // Second click reuses the saved site and never overwrites the first draft.
   await desktop.evaluate(({ dialog }) => {

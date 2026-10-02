@@ -21,18 +21,22 @@ export function jekyllDate(now = new Date()) {
   );
 }
 
-/** Blank front matter for the author to fill in; title is on line 3. */
+/**
+ * Blank front matter with commented examples; title stays on line 3 so the
+ * editor cursor lands after "title: ". Two spaces before each "#" keep the
+ * comment separate from whatever is typed there.
+ */
 export function frontMatter(date) {
   return [
     "---",
     "layout: post",
-    "title: ",
-    `date: ${date}`,
-    "description: ",
-    "tags: ",
-    "categories:",
+    "title:  # e.g. Infrastructure network effects",
+    `date: ${date} # set when created; posts are sorted by this`,
+    "description:  # one line shown under the title, e.g. a blog-in-progress examining the network effects of infrastructure",
+    "tags:  # space-separated, e.g. infrastructure biodefense",
+    "categories:  # optional, e.g. strategy",
     "related_posts: false",
-    "published: false # draft — flip to true to publish",
+    "published: false # draft — flip to true to publish; rename this file to YYYY-MM-DD-your-title.md first (it sets the URL)",
     "---",
     "",
     "",
