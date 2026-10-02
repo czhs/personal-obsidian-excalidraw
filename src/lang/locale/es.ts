@@ -16,6 +16,18 @@ declare const PLUGIN_VERSION: string;
 
 // Español
 export default {
+  MATH_EDITOR_TITLE: "Ecuación",
+  MATH_EDITOR_HINT: "Escribe / para una fracción, ^ para una potencia o usa una plantilla.",
+  MATH_VISUAL: "Visual",
+  MATH_PREVIEW: "Vista previa",
+  MATH_LOADING: "Cargando el editor…",
+  MATH_INSERT: "Insertar ecuación",
+  MATH_CHECKING: "Comprobando…",
+  MATH_FILL_FIELDS: "Completa los campos vacíos.",
+  MATH_INVALID: "Revisa la sintaxis.",
+  MATH_READY: "Listo · Cmd/Ctrl+Enter para insertar · Esc para cancelar",
+  MATH_TEMPLATE_NAMES: "Fracción|Potencia|Raíz cuadrada|Suma|Producto|Integral|Derivada parcial|Gradiente|Vector en negrita|Vector con flecha|Vector columna|Matriz|Esperanza|Norma|Transpuesta|Theta",
+
   // Sugester
   SELECT_FILE_TO_INSERT: "Selecciona un archivo para insertar",
   // main.ts
@@ -275,6 +287,7 @@ export default {
   CODE_BLOCK_LANGUAGE_ARIA: "Lenguaje del código",
   CODE_BLOCK_LANGUAGE_PYTHON: "Python / NumPy / PyTorch",
   CODE_BLOCK_LANGUAGE_CPP: "C++",
+  CODE_BLOCK_LANGUAGE_JSON: "JSON",
   CODE_BLOCK_LANGUAGE_SYSTEMVERILOG: "SystemVerilog",
   CODE_BLOCK_EDITOR_ARIA: "Editor del bloque de código",
   CODE_BLOCK_ESCAPE_HINT: "Esc para volver al lienzo",

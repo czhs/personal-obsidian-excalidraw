@@ -1,4 +1,7 @@
 import { DataURL } from "@zsviczian/excalidraw/types/excalidraw/types";
+import { arrayBufferToBase64 } from "src/utils/fileUtils";
+import { generateIdFromFile } from "./EmbeddedFileLoader";
+import { localMathRenderer } from "./math/LocalMathRenderer";
 import { TFile } from "obsidian";
 import ExcalidrawView from "../view/ExcalidrawView";
 import { FileData, MimeType } from "src/types/embeddedFileLoaderTypes";
@@ -49,49 +52,49 @@ export async function tex2dataURL(
   created: number;
   size: { height: number; width: number };
 } | null> {
-  // 1. Ask the gateway to verify the Extras plugin and return the MathJax API
-  const mathjaxAPI = await plugin.extrasGateway.getMathJax();
-
-  if (!mathjaxAPI) {
-    // The Gateway handles the user prompts. If it returns null, the user cancelled,
-    // or they don't have the plugin/proper version. We abort cleanly.
-    return null;
-  }
-
   // 2. Resolve Preamble File using cachedRead for performance
   let preambleStr: string | null = null;
   const preamblePath = plugin.settings.latexPreambleLocation || "preamble.sty";
-  const preambleFile = plugin.app.vault.getAbstractFileByPath(preamblePath);
+  const preambleFile = plugin.app.vault.getFileByPath(preamblePath);
 
   if (preambleFile instanceof TFile) {
     preambleStr = await plugin.app.vault.cachedRead(preambleFile);
   }
 
-  // 3. Hand the request off to the cleanly isolated Extras plugin
-  // The runtime component version gate guarantees this additive signature even
-  // while the separately published API typings remain on the previous version.
-  const mathjaxAPIWithOptions: { tex2dataURL: Tex2DataURLWithOptions } =
-    mathjaxAPI;
-  return (await mathjaxAPIWithOptions.tex2dataURL(
-    tex,
-    scale,
-    preambleStr,
-    options,
-  )) as {
-    mimeType: MimeType;
-    fileId: FileId;
-    dataURL: DataURL;
-    created: number;
-    size: { height: number; width: number };
-  } | null;
+  try {
+    const rendered = localMathRenderer().render(tex, scale, preambleStr ?? "");
+    const bytes = new TextEncoder().encode(rendered.svg).buffer;
+    return {
+      mimeType: "image/svg+xml",
+      fileId: await generateIdFromFile(bytes),
+      dataURL:
+        `data:image/svg+xml;base64,${arrayBufferToBase64(bytes)}` as DataURL,
+      created: Date.now(),
+      size: { width: rendered.width, height: rendered.height },
+    };
+  } catch (error) {
+    // Keep advanced Extras-only extensions working when that service is already active.
+    const api = plugin.extrasGateway.getAPI();
+    if (
+      api?.features.isActive("mathjax") &&
+      plugin.extrasGateway.checkVersion("mathjax", api).valid
+    ) {
+      const mathjaxAPIWithOptions: { tex2dataURL: Tex2DataURLWithOptions } =
+        api.mathjax;
+      return (await mathjaxAPIWithOptions.tex2dataURL(
+        tex,
+        scale,
+        preambleStr,
+        options,
+      )) as Awaited<ReturnType<typeof tex2dataURL>>;
+    }
+    if (options?.throwOnError) throw error;
+    return null;
+  }
 }
 
 export const clearMathJaxVariables = (plugin: ExcalidrawPlugin) => {
-  // Try to access without prompting the user.
-  // If the plugin is disabled, we don't need to clear variables anyway.
-  const api = plugin.app.plugins.plugins["excalidraw-extras"]
-    ?.api as ExcalidrawExtrasAPI;
-  if (api?.mathjax) {
-    api.mathjax.clearMathJaxVariables();
-  }
+  localMathRenderer().clear();
+  const api = plugin.extrasGateway.getAPI();
+  api?.mathjax?.clearMathJaxVariables();
 };

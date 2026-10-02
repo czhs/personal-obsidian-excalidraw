@@ -13,6 +13,7 @@ import {
   indentWithTab,
 } from "@codemirror/commands";
 import { cpp } from "@codemirror/lang-cpp";
+import { json } from "@codemirror/lang-json";
 import { python } from "@codemirror/lang-python";
 import {
   bracketMatching,
@@ -44,6 +45,8 @@ import type { UIAppState } from "@zsviczian/excalidraw/types/excalidraw/types";
 import { tags } from "@lezer/highlight";
 import chroma from "chroma-js";
 import * as React from "react";
+import { mountCodeBlockArrowOverlay } from "src/utils/codeBlockArrowOverlay";
+import { mountCodeBlockWheelForwarding } from "src/utils/codeBlockWheel";
 import { t } from "src/lang/helpers";
 import type ExcalidrawView from "src/view/ExcalidrawView";
 import {
@@ -374,6 +377,8 @@ function languageExtension(language: CodeBlockLanguage): Extension {
       return cpp();
     case "systemverilog":
       return systemVerilog;
+    case "json":
+      return json();
     case "python":
     default:
       return python();
@@ -408,11 +413,27 @@ export function CodeBlockEmbeddable({
   const initialDataRef = React.useRef(initialData);
   const languageRef = React.useRef(initialData.language);
   const autocompleteRef = React.useRef(initialData.autocomplete);
+  const blockRef = React.useRef<HTMLDivElement>(null);
   const editorHostRef = React.useRef<HTMLDivElement>(null);
   const editorRef = React.useRef<EditorView | null>(null);
   const languageCompartmentRef = React.useRef(new Compartment());
   const completionCompartmentRef = React.useRef(new Compartment());
   const themeStyle = createCodeBlockTheme(element, appState);
+
+  React.useEffect(() => {
+    if (!blockRef.current) return;
+    return mountCodeBlockWheelForwarding(blockRef.current);
+  }, []);
+
+  React.useEffect(() => {
+    if (!editorHostRef.current || !view.excalidrawAPI) return;
+    return mountCodeBlockArrowOverlay(
+      editorHostRef.current,
+      element.id,
+      view.excalidrawAPI,
+      view.packages.excalidrawLib,
+    );
+  }, [element.id, view]);
 
   const persist = React.useCallback(
     (
@@ -496,6 +517,17 @@ export function CodeBlockEmbeddable({
             spellcheck: "false",
           }),
           EditorView.domEventHandlers({
+            // Keep clipboard events inside CodeMirror while allowing its
+            // built-in handlers to copy, cut, and paste the code selection.
+            copy(event) {
+              event.stopPropagation();
+            },
+            cut(event) {
+              event.stopPropagation();
+            },
+            paste(event) {
+              event.stopPropagation();
+            },
             keydown(event) {
               if (event.key === "Escape" && !event.defaultPrevented) {
                 event.preventDefault();
@@ -638,6 +670,7 @@ export function CodeBlockEmbeddable({
   return (
     <div
       className="excalidraw-code-block"
+      ref={blockRef}
       data-active={isActive}
       onPointerDown={(event) => event.stopPropagation()}
       style={themeStyle}
@@ -653,6 +686,7 @@ export function CodeBlockEmbeddable({
         >
           <option value="python">{t("CODE_BLOCK_LANGUAGE_PYTHON")}</option>
           <option value="cpp">{t("CODE_BLOCK_LANGUAGE_CPP")}</option>
+          <option value="json">{t("CODE_BLOCK_LANGUAGE_JSON")}</option>
           <option value="systemverilog">
             {t("CODE_BLOCK_LANGUAGE_SYSTEMVERILOG")}
           </option>

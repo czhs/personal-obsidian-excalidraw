@@ -14,6 +14,18 @@ import {
 
 // русский
 export default {
+  MATH_EDITOR_TITLE: "Уравнение",
+  MATH_EDITOR_HINT: "Введите / для дроби, ^ для степени или выберите шаблон.",
+  MATH_VISUAL: "Визуально",
+  MATH_PREVIEW: "Предпросмотр",
+  MATH_LOADING: "Загрузка редактора…",
+  MATH_INSERT: "Вставить уравнение",
+  MATH_CHECKING: "Проверка…",
+  MATH_FILL_FIELDS: "Заполните пустые поля.",
+  MATH_INVALID: "Проверьте синтаксис.",
+  MATH_READY: "Готово · Cmd/Ctrl+Enter — вставить · Esc — отменить",
+  MATH_TEMPLATE_NAMES: "Дробь|Степень|Квадратный корень|Сумма|Произведение|Интеграл|Частная производная|Градиент|Жирный вектор|Вектор со стрелкой|Вектор-столбец|Матрица|Математическое ожидание|Норма|Транспонирование|Тета",
+
   // main.ts
   SETTINGS_DATA_INVALID:
     "Excalidraw ожидает корректный файл data.json. Изменения настроек не будут сохранены, пока файл не будет восстановлен или вы не перезапустите Obsidian и не выберете сброс настроек.",
@@ -252,6 +264,7 @@ export default {
   CODE_BLOCK_LANGUAGE_ARIA: "Язык кода",
   CODE_BLOCK_LANGUAGE_PYTHON: "Python / NumPy / PyTorch",
   CODE_BLOCK_LANGUAGE_CPP: "C++",
+  CODE_BLOCK_LANGUAGE_JSON: "JSON",
   CODE_BLOCK_LANGUAGE_SYSTEMVERILOG: "SystemVerilog",
   CODE_BLOCK_EDITOR_ARIA: "Редактор блока кода",
   CODE_BLOCK_ESCAPE_HINT: "Esc — вернуться на холст",

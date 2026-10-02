@@ -11,6 +11,18 @@ declare const PLUGIN_VERSION: string;
 
 // 简体中文
 export default {
+  MATH_EDITOR_TITLE: "公式",
+  MATH_EDITOR_HINT: "输入 / 创建分数、^ 创建幂，或选择下方模板。",
+  MATH_VISUAL: "可视化",
+  MATH_PREVIEW: "画布预览",
+  MATH_LOADING: "正在加载公式编辑器…",
+  MATH_INSERT: "插入公式",
+  MATH_CHECKING: "正在检查公式…",
+  MATH_FILL_FIELDS: "请填写空白字段。",
+  MATH_INVALID: "请检查公式语法。",
+  MATH_READY: "已就绪 · Cmd/Ctrl+Enter 插入 · Esc 取消",
+  MATH_TEMPLATE_NAMES: "分数|幂|平方根|求和|连乘|积分|偏导数|梯度|粗体向量|箭头向量|列向量|矩阵|期望|范数|转置|Theta",
+
   INITIALIZATION_MESSAGE: "等待所有插件就绪…",
   // Sugester
   SELECT_FILE_TO_INSERT: "选择要嵌入到当前绘图中的文件",
@@ -234,6 +246,7 @@ export default {
   CODE_BLOCK_LANGUAGE_ARIA: "代码语言",
   CODE_BLOCK_LANGUAGE_PYTHON: "Python / NumPy / PyTorch",
   CODE_BLOCK_LANGUAGE_CPP: "C++",
+  CODE_BLOCK_LANGUAGE_JSON: "JSON",
   CODE_BLOCK_LANGUAGE_SYSTEMVERILOG: "SystemVerilog",
   CODE_BLOCK_EDITOR_ARIA: "代码块编辑器",
   CODE_BLOCK_ESCAPE_HINT: "按 Esc 返回画布",

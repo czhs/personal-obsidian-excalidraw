@@ -19,6 +19,9 @@ I build this plugin as a labor of love. Curious about the philosophy behind it? 
 `,
   "2.28.0": `
 ## New
+- Code blocks now support **JSON**, with syntax highlighting and automatic indentation. Choose JSON from the block's language menu.
+- **Visual equations:** press **Cmd/Ctrl+Shift+L** to insert or edit an equation. Type fractions and powers directly, or use templates for sums, products, integrals, derivatives, vectors, matrices, gradients, and expectations. Standard equations render locally with no Extras installation. LaTeX source editing remains available.
+- The personal fork includes an Excalidraw Vaults Mac app with a searchable vault gallery, new vault creation, and upgrades to the custom editor. Vault cards can be organized into dashboard folders, renamed, or archived without deleting files. The Archive tab can restore vaults to Obsidian and their dashboard folders. Upgrades take one click, preserve drawings and settings, and back up the previous plugin. With Obsidian’s CLI enabled, open drawings are saved and the editor reloads automatically without restarting other vaults. Vault cards support uploaded covers and six offline Unsplash presets, preserved through rename and archive.
 - Added a live **Insert code block** element to the command palette and canvas context menu, with a default **Mod+Shift+C** hotkey. The block is focused immediately and provides CodeMirror syntax highlighting, bracket and quote pairing, smart indentation, Tab/Shift-Tab indentation, line numbers, undo/redo, and optional completion support for Python, C++, and SystemVerilog. A compact per-block **AC** control toggles autocomplete.
 - The Community Script Store now has a searchable card-based library, a focused update section with **Update all**, and a compact top area for Excalidraw Mastery, support, and creating your own scripts. Script details now support reinstalling, opening local files in a new tab, uninstalling, and moving managed scripts between groups under the **Downloaded** folder. Update detection keeps the existing \`directory-info.json\` modified-time contract, ignores private copies outside **Downloaded**, and handles duplicate managed copies consistently. [#2944](${URLs.GITHUB_COM_ZSVICZIAN_OBSIDIAN_EXCALIDRAW_PLUGIN_PULL}/2944)
 - Copied Markdown image SVGs now replace embedded base64 images and fonts with short placeholders, making them smaller and easier to share with AI agents when developing custom CSS.
@@ -28,6 +31,9 @@ I build this plugin as a labor of love. Curious about the philosophy behind it? 
 - Right click panning (without enabling a specific "Miro-style" setting) is now supported. [#12110](${URLs.GITHUB_COM_EXCALIDRAW_EXCALIDRAW_PULL}/12110)
 
 ## Fixed / Refactored
+- Two-finger trackpad panning now works over code blocks, including while editing code. Canvas zoom gestures also work inside the block.
+- Copy, cut, and paste inside code blocks now act on the code instead of the selected canvas elements.
+- Arrows placed in front of code blocks now remain visible over the code, including arrowheads and labels. Straight and curved arrows can point at code inside the block; elbow arrows still attach to the border.
 - Code blocks now keep readable identifiers, syntax colors, cursors, and completion menus across canvas colors and Obsidian themes. Edits are preserved immediately when duplicating or closing a block, language changes keep their contents, and Escape returns to the canvas. SystemVerilog adds keyword completion, comment shortcuts, and improved literal highlighting.
 - Lasso tool was not available in the More Tools menu in Tray Mode [#2937](${URLs.GITHUB_COM_ZSVICZIAN_OBSIDIAN_EXCALIDRAW_PLUGIN_ISSUES}/2937)
 - \`.excalidraw\` drawings with embedded binary images now render those images when opened into an already-used Excalidraw tab. [#2929](${URLs.GITHUB_COM_ZSVICZIAN_OBSIDIAN_EXCALIDRAW_PLUGIN_ISSUES}/2929)

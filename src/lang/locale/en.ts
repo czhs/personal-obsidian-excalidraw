@@ -16,6 +16,18 @@ declare const PLUGIN_VERSION: string;
 
 // English
 export default {
+  MATH_EDITOR_TITLE: "Equation",
+  MATH_EDITOR_HINT: "Type / for a fraction, ^ for a power, or use a template below.",
+  MATH_VISUAL: "Visual",
+  MATH_PREVIEW: "Canvas preview",
+  MATH_LOADING: "Loading equation editor…",
+  MATH_INSERT: "Insert equation",
+  MATH_CHECKING: "Checking equation…",
+  MATH_FILL_FIELDS: "Fill in the empty fields.",
+  MATH_INVALID: "Check the equation syntax.",
+  MATH_READY: "Ready · Cmd/Ctrl+Enter to insert · Esc to cancel",
+  MATH_TEMPLATE_NAMES: "Fraction|Power|Square root|Sum|Product|Integral|Partial derivative|Gradient|Bold vector|Arrow vector|Column vector|Matrix|Expectation|Norm|Transpose|Theta",
+
   INITIALIZATION_MESSAGE:
     "Excalidraw is waiting for Obsidian to initialize all of your plugins...",
   // Sugester
@@ -262,6 +274,7 @@ export default {
   CODE_BLOCK_LANGUAGE_ARIA: "Code language",
   CODE_BLOCK_LANGUAGE_PYTHON: "Python / NumPy / PyTorch",
   CODE_BLOCK_LANGUAGE_CPP: "C++",
+  CODE_BLOCK_LANGUAGE_JSON: "JSON",
   CODE_BLOCK_LANGUAGE_SYSTEMVERILOG: "SystemVerilog",
   CODE_BLOCK_EDITOR_ARIA: "Code block editor",
   CODE_BLOCK_ESCAPE_HINT: "Esc to canvas",

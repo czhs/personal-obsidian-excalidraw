@@ -2494,7 +2494,7 @@ export class CommandManager {
       },
     });
 
-    this.addCommand({
+    const insertMathCommand = this.addCommand({
       id: "insert-LaTeX-symbol",
       name: t("INSERT_LATEX"),
       checkCallback: (checking: boolean) => {
@@ -2505,12 +2505,19 @@ export class CommandManager {
         }
         const view = this.app.workspace.getActiveViewOfType(ExcalidrawView);
         if (view) {
-          insertLaTeXToView(view);
+          const selected = view.getViewSelectedElements();
+          const equation = selected.length === 1 && selected[0].type === "image" && view.excalidrawData.hasEquation(selected[0].fileId) ? selected[0] : null;
+          if (equation) void view.openLaTeXEditor(equation.id);
+          else insertLaTeXToView(view, true);
           return true;
         }
         return false;
       },
     });
+
+    const insertMathHotkeys: Hotkey[] = [{ modifiers: ["Mod", "Shift"], key: "l" }];
+    this.app.hotkeyManager.addDefaultHotkeys(insertMathCommand.id, insertMathHotkeys);
+    insertMathCommand.hotkeys = insertMathHotkeys;
 
     this.addCommand({
       id: "toggle-excalidraw-view",

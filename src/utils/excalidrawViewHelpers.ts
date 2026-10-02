@@ -1,6 +1,7 @@
 import type {
   ExcalidrawImageElement,
 } from "@zsviczian/excalidraw/types/element/src/types";
+import { DEFAULT_SETTINGS } from "src/core/settingsDefaults";
 import { getEA } from "src/core";
 import { t } from "src/lang/helpers";
 import type ExcalidrawView from "src/view/ExcalidrawView";
@@ -24,7 +25,9 @@ export const insertLaTeXToView = (
       view.plugin,
       app,
       t("ENTER_LATEX"),
-      view.plugin.settings.latexBoilerplate,
+      view.plugin.settings.latexBoilerplate === DEFAULT_SETTINGS.latexBoilerplate
+        ? ""
+        : view.plugin.settings.latexBoilerplate,
     ).then(
       async (formula: string) => {
         const lastLatexEl = ea

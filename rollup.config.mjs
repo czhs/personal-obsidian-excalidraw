@@ -14,6 +14,7 @@ import cssnano from 'cssnano';
 import { minify } from 'uglify-js';
 import json from '@rollup/plugin-json';
 import { parseEnv } from 'node:util';
+import { buildMathRuntime, mathFonts } from './scripts/buildMathRuntime.mjs';
 import { buildReactRuntime } from './scripts/buildReactRuntime.mjs';
 
 function compressDeflateBase64(code) {
@@ -144,6 +145,9 @@ const reactRuntimeSource = isLib
 const reactRuntime = isLib || !isProd
   ? reactRuntimeSource
   : minifyCode(reactRuntimeSource);
+const mathInputSource = isLib ? "" : await buildMathRuntime("scripts/mathInputEntry.mjs", "ExcalidrawMathInput");
+const mathRendererSource = isLib ? "" : await buildMathRuntime("scripts/mathRendererEntry.mjs", "ExcalidrawMathRenderer");
+const bundledMathFonts = isLib ? [] : await mathFonts();
 const reactPackagesCompressed = isLib
   ? ""
   : compressDeflateBase64(reactRuntime);
@@ -262,6 +266,9 @@ const packageString = isLib
   'let REACT_PACKAGES = unpackBase64Deflate("' + reactPackagesCompressed + '");\n' +
   'const unpackExcalidraw = () => unpackBase64Deflate("' + compressDeflateBase64(excalidraw_pkg) + '");\n' +
   'const evaluateRuntimeInstructions = (win, instruction) => win.eval.call(win, instruction);\n' +
+  'const unpackMathInput = () => unpackBase64Deflate("' + compressDeflateBase64(mathInputSource) + '");\n' +
+  'const unpackMathRenderer = () => unpackBase64Deflate("' + compressDeflateBase64(mathRendererSource) + '");\n' +
+  'const bundledMathFonts = ' + JSON.stringify(bundledMathFonts) + ';\n' +
   'const reactRuntimeInstructions = `(function() {${REACT_PACKAGES}; return {React, ReactDOM, ReactJSXRuntime, ReactJSXDevRuntime};})()`;\n' +
   'let {React, ReactDOM, ReactJSXRuntime, ReactJSXDevRuntime} = evaluateRuntimeInstructions(window, reactRuntimeInstructions);\n' +
   'REACT_PACKAGES = "";\n' +

@@ -11,6 +11,18 @@ declare const PLUGIN_VERSION: string;
 
 // 繁體中文
 export default {
+  MATH_EDITOR_TITLE: "公式",
+  MATH_EDITOR_HINT: "輸入 / 建立分數、^ 建立冪，或選擇下方範本。",
+  MATH_VISUAL: "視覺化",
+  MATH_PREVIEW: "畫布預覽",
+  MATH_LOADING: "正在載入公式編輯器…",
+  MATH_INSERT: "插入公式",
+  MATH_CHECKING: "正在檢查公式…",
+  MATH_FILL_FIELDS: "請填寫空白欄位。",
+  MATH_INVALID: "請檢查公式語法。",
+  MATH_READY: "已就緒 · Cmd/Ctrl+Enter 插入 · Esc 取消",
+  MATH_TEMPLATE_NAMES: "分數|冪|平方根|求和|連乘|積分|偏導數|梯度|粗體向量|箭頭向量|列向量|矩陣|期望|範數|轉置|Theta",
+
   INITIALIZATION_MESSAGE: "等待所有外掛就緒…",
   // Sugester
   SELECT_FILE_TO_INSERT: "選擇要嵌入到當前繪圖中的檔案",
@@ -233,6 +245,7 @@ export default {
   CODE_BLOCK_LANGUAGE_ARIA: "程式碼語言",
   CODE_BLOCK_LANGUAGE_PYTHON: "Python / NumPy / PyTorch",
   CODE_BLOCK_LANGUAGE_CPP: "C++",
+  CODE_BLOCK_LANGUAGE_JSON: "JSON",
   CODE_BLOCK_LANGUAGE_SYSTEMVERILOG: "SystemVerilog",
   CODE_BLOCK_EDITOR_ARIA: "程式碼區塊編輯器",
   CODE_BLOCK_ESCAPE_HINT: "按 Esc 返回畫布",

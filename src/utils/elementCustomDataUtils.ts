@@ -6,7 +6,7 @@ import type {
 } from "@zsviczian/excalidraw/types/element/src/types";
 import type { PDFPageViewProps } from "src/types/embeddedFileLoaderTypes";
 
-export type CodeBlockLanguage = "python" | "cpp" | "systemverilog";
+export type CodeBlockLanguage = "python" | "cpp" | "systemverilog" | "json";
 
 /** Source code stored with a drawing element, including copied elements. */
 export interface CodeBlockData {
@@ -27,7 +27,8 @@ export function getCodeBlockData(
     typeof record.code !== "string" ||
     (record.language !== "python" &&
       record.language !== "cpp" &&
-      record.language !== "systemverilog")
+      record.language !== "systemverilog" &&
+      record.language !== "json")
   )
     return null;
   return {

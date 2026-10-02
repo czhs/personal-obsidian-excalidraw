@@ -1,9 +1,9 @@
 {
   "id": "obsidian-excalidraw-plugin",
   "name": "Excalidraw Codeblocks",
-  "version": "2.28.0-codeblocks.1",
+  "version": "2.28.0-codeblocks.2",
   "minAppVersion": "1.8.7",
-  "description": "A personal Excalidraw fork with live, syntax-highlighted code blocks.",
+  "description": "A personal Excalidraw fork with live code blocks and visual equation editing.",
   "author": "Zsolt Viczian",
   "authorUrl": "https://community.sketch-your-mind.com/em",
   "fundingUrl": "https://ko-fi.com/zsolt",
