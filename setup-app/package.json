@@ -1,0 +1,19 @@
+{
+  "name": "excalidraw-vaults",
+  "productName": "Excalidraw Vaults",
+  "version": "1.5.0",
+  "description": "A personal home for custom Excalidraw vaults",
+  "private": true,
+  "type": "module",
+  "main": "main.mjs",
+  "scripts": {
+    "start": "electron .",
+    "package": "node package.mjs",
+    "check": "node check-ui.mjs"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.3.0",
+    "electron": "44.4.5",
+    "playwright-core": "1.63.0"
+  }
+}

@@ -4,6 +4,28 @@
 
 This fork adds a code-block element that behaves like a small code editor directly on the Excalidraw canvas. Press **Cmd/Ctrl+Shift+C** to insert one, then write Python (including NumPy/PyTorch), C++, or SystemVerilog with syntax highlighting, automatic brackets, indentation, and optional autocomplete.
 
+## Personal Mac setup
+
+Open **Excalidraw Vaults.app** for a searchable gallery of vaults, new vault creation, and upgrades to your custom Excalidraw. The standalone Mac app includes your plugin and a custom icon. Upgrades save open drawings and reload Excalidraw automatically when Obsidian’s CLI is enabled. Vault cards support private image uploads, offline cover presets, and an integrated Unsplash search gallery (one-time access key connection). Press **Cmd/Ctrl+Shift+L** in a drawing for the visual equation editor, with local rendering and ML notation templates. Drawings and settings are preserved; no drawing conversion is required. See [DEPLOYMENT.md](./DEPLOYMENT.md) for building the app and backups.
+
+## Set up on a friend's Mac
+
+You need macOS, [Node.js 22+](https://nodejs.org/), and read access to this repository.
+
+```sh
+git clone https://github.com/czhs/personal-obsidian-excalidraw.git
+cd personal-obsidian-excalidraw
+npm install
+npm install --prefix setup-app
+npm run setup:package
+```
+
+This builds the plugin and **Excalidraw Vaults.app** into `desktop-dist/Excalidraw Vaults-darwin-<arch>/`. Drag the app to Applications or your Desktop. It is not notarized, so the first time, right-click the app, choose **Open**, then **Open** again. To run it without packaging, use `npm run build && npm run setup:mac`.
+
+In the app, select **New vault** or **Add an existing vault**, then **Upgrade** to install the custom editor. To update later, `git pull` and run `npm run setup:package` again.
+
+**New blog post** creates a draft in a Jekyll site's `_posts` folder (front matter, today's date, `published: false`) and opens it in Sublime Text, or your default text editor if Sublime isn't installed. The first time, choose the site folder that contains `_config.yml`; the app remembers it.
+
 ## Install or update with BRAT
 
 This repository is private, so each Obsidian installation needs a GitHub fine-grained personal access token once. The token should have access only to `czhs/personal-obsidian-excalidraw` and only **Contents: read-only** permission.

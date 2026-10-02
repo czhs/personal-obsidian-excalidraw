@@ -31,3 +31,11 @@ Obsidian
 test-vault/.obsidian/plugins/obsidian-excalidraw-plugin/
 
 repository.zip
+
+# Personal Electron setup app
+desktop-dist/
+setup-app/*-preview.png
+
+# Local plugin backups and the personal test vault
+**/codeblocks-backups/
+starter-vault/
