@@ -420,61 +420,6 @@
         </p>
       </form>
     </dialog>
-    <dialog id="post-dialog" aria-labelledby="post-title">
-      <form id="post-form">
-        <div class="modal-top">
-          <div class="eyebrow">A NEW DRAFT</div>
-          <button
-            type="button"
-            class="icon-button"
-            data-close="post-dialog"
-            aria-label="Close blog post"
-          >
-            ×
-          </button>
-        </div>
-        <h2 id="post-title">Write a blog post.</h2>
-        <p>
-          Creates a formatted draft in your site’s <code>_posts</code> folder
-          and opens it in Sublime Text.
-        </p>
-        <label class="field"
-          >Title<input
-            id="post-name"
-            maxlength="200"
-            required
-            autocomplete="off"
-            placeholder="What are you writing about?" /></label
-        ><label class="field"
-          >Description<input
-            id="post-description"
-            maxlength="300"
-            autocomplete="off"
-            placeholder="Optional one-line summary" /></label
-        ><label class="field"
-          >Tags<input
-            id="post-tags"
-            maxlength="200"
-            autocomplete="off"
-            placeholder="Optional, separated by spaces" /></label
-        ><label class="field">Website folder</label
-        ><button type="button" id="choose-site" class="location-button">
-          Choose your Jekyll site… <span>↗</span>
-        </button>
-        <p class="form-note">
-          Drafts start with <code>published: false</code>. Existing posts are
-          never overwritten.
-        </p>
-        <div id="post-error" class="form-error" role="alert"></div>
-        <div class="modal-actions">
-          <button type="button" class="secondary" data-close="post-dialog">
-            Cancel</button
-          ><button class="primary" type="submit" id="post-submit">
-            Create and open <span>↗</span>
-          </button>
-        </div>
-      </form>
-    </dialog>
     <template id="folder-template"
       ><div class="folder-row">
         <button class="nav-item folder-filter">

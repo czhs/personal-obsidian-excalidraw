@@ -715,12 +715,6 @@ dialog p {
   color: #78896b;
   overflow-wrap: anywhere;
 }
-dialog p code {
-  font-size: 11px;
-  background: #eef0e9;
-  border-radius: 4px;
-  padding: 1px 4px;
-}
 dialog .form-note {
   font-size: 10px;
   color: #9aa58e;

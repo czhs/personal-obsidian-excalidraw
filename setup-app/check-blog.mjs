@@ -1,4 +1,4 @@
-/** Exercise the blog-post dialog against a disposable Jekyll site; the editor is stubbed. */
+/** Exercise the one-click blog draft button against a disposable Jekyll site; the editor is stubbed. */
 import { _electron as electron } from "playwright-core";
 import electronPath from "electron";
 import assert from "node:assert/strict";
@@ -24,31 +24,23 @@ try {
     dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [folder] });
   }, site);
   const page = await desktop.firstWindow();
+  const posts = path.join(site, "_posts");
+  // First click asks for the site folder (stubbed), then creates and opens a draft.
   await page.click("#new-post");
-  await page.waitForSelector("#post-dialog[open]");
-  if (process.env.SCREENSHOT) await page.screenshot({ path: process.env.SCREENSHOT });
-  await page.fill("#post-name", "My First: Post");
-  await page.click("#post-submit");
-  assert.match(await page.textContent("#post-error"), /website folder/);
-  await page.click("#choose-site");
-  await page.waitForFunction(() => document.querySelector("#choose-site").textContent.includes("site"));
-  await page.fill("#post-description", "A short test");
-  await page.fill("#post-tags", "ai, infra");
-  await page.click("#post-submit");
-  await page.waitForSelector("#post-dialog", { state: "hidden" });
-  const [file] = await readdir(path.join(site, "_posts"));
-  assert.match(file, /^\d{4}-\d{2}-\d{2}-my-first-post\.md$/);
-  const text = await readFile(path.join(site, "_posts", file), "utf8");
-  assert.match(text, /^---\nlayout: post\ntitle: "My First: Post"\ndate: \d{4}-\d{2}-\d{2} \d{2}:\d{2}:00[+-]\d{4}\ndescription: "A short test"\ntags: ai infra\n/);
+  await page.waitForFunction(() => /opened in test editor/.test(document.querySelector("#toast").textContent));
+  const [file] = await readdir(posts);
+  assert.match(file, /^\d{4}-\d{2}-\d{2}-untitled\.md$/);
+  const text = await readFile(path.join(posts, file), "utf8");
+  assert.match(text, /^---\nlayout: post\ntitle: \ndate: \d{4}-\d{2}-\d{2} \d{2}:\d{2}:00[+-]\d{4}\ndescription: \ntags: \n/);
   assert.match(text, /published: false/);
-  assert.match(await page.textContent("#toast"), /opened in test editor/);
-  // Same title again must not overwrite.
+  // Second click reuses the saved site and never overwrites the first draft.
+  await desktop.evaluate(({ dialog }) => {
+    dialog.showOpenDialog = async () => { throw new Error("site folder should be remembered"); };
+  });
   await page.click("#new-post");
-  await page.fill("#post-name", "My First: Post");
-  await page.click("#post-submit");
-  assert.match(await page.textContent("#post-error"), /already exists/);
-  assert.equal(await readFile(path.join(site, "_posts", file), "utf8"), text);
-  // Site choice persists across restarts.
+  await page.waitForFunction(() => /untitled-2\.md/.test(document.querySelector("#toast").textContent));
+  assert.deepEqual((await readdir(posts)).sort(), [file, file.replace("untitled", "untitled-2")].sort());
+  assert.equal(await readFile(path.join(posts, file), "utf8"), text);
   assert.equal(JSON.parse(await readFile(path.join(root, "settings", "blog.json"), "utf8")).siteDirectory, site);
   console.log("Blog post checks passed.");
 } finally {

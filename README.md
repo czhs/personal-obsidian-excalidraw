@@ -24,7 +24,7 @@ This builds the plugin and **Excalidraw Vaults.app** into `desktop-dist/Excalidr
 
 In the app, select **New vault** or **Add an existing vault**, then **Upgrade** to install the custom editor. To update later, `git pull` and run `npm run setup:package` again.
 
-**New blog post** creates a draft in a Jekyll site's `_posts` folder (front matter, today's date, `published: false`) and opens it in Sublime Text, or your default text editor if Sublime isn't installed. The first time, choose the site folder that contains `_config.yml`; the app remembers it.
+**New blog post** immediately creates `_posts/YYYY-MM-DD-untitled.md` in a Jekyll site, with the post header (`layout`, today's date and time zone, blank title/description/tags, `published: false`), and opens it in Sublime Text, or your default text editor if Sublime isn't installed. The first click asks for the site folder that contains `_config.yml`; the app remembers it.
 
 ## Install or update with BRAT
 

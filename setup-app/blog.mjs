@@ -21,33 +21,15 @@ export function jekyllDate(now = new Date()) {
   );
 }
 
-export function slugify(title) {
-  return title
-    .normalize("NFKD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80)
-    .replace(/-+$/g, "");
-}
-
-/** YAML double-quoted scalars are a superset of JSON strings. */
-const quote = (value) => JSON.stringify(value);
-
-export function frontMatter({ title, description, tags, date }) {
-  const tagList = tags
-    .split(/[\s,]+/)
-    .map((tag) => tag.trim())
-    .filter(Boolean)
-    .join(" ");
+/** Blank front matter for the author to fill in; title is on line 3. */
+export function frontMatter(date) {
   return [
     "---",
     "layout: post",
-    `title: ${quote(title)}`,
+    "title: ",
     `date: ${date}`,
-    `description: ${quote(description)}`,
-    `tags: ${tagList}`,
+    "description: ",
+    "tags: ",
     "categories:",
     "related_posts: false",
     "published: false # draft — flip to true to publish",
@@ -97,43 +79,35 @@ export class BlogDrafts {
     return this.status();
   }
 
-  async create({ title, description = "", tags = "" } = {}) {
+  /** Creates _posts/YYYY-MM-DD-untitled[-n].md immediately and opens it. */
+  async create() {
     if (!this.siteDirectory) throw new Error("Choose your website folder first.");
-    if (typeof title !== "string" || !title.trim())
-      throw new Error("Give your post a title.");
-    if (typeof description !== "string" || typeof tags !== "string")
-      throw new Error("Invalid post details.");
-    title = title.trim();
-    const slug = slugify(title);
-    if (!slug)
-      throw new Error("Use at least one letter or number in the title.");
     const now = new Date();
     const day = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
     const posts = path.join(this.siteDirectory, "_posts");
     await mkdir(posts, { recursive: true });
-    const file = path.join(posts, `${day}-${slug}.md`);
-    const content = frontMatter({
-      title,
-      description: description.trim(),
-      tags,
-      date: jekyllDate(now),
-    });
-    // "wx" never overwrites an existing post.
-    await writeFile(file, content, { flag: "wx" }).catch((error) => {
-      if (error.code === "EEXIST")
-        throw new Error(
-          `A post named ${path.basename(file)} already exists. Choose a different title.`,
-        );
-      throw error;
-    });
-    const editor = await this.open(file, content.split("\n").length - 1);
-    return { file, editor };
+    const content = frontMatter(jekyllDate(now));
+    for (let n = 1; n < 100; n++) {
+      const file = path.join(
+        posts,
+        `${day}-untitled${n === 1 ? "" : `-${n}`}.md`,
+      );
+      try {
+        // "wx" never overwrites an existing post.
+        await writeFile(file, content, { flag: "wx" });
+      } catch (error) {
+        if (error.code === "EEXIST") continue;
+        throw error;
+      }
+      return { file, editor: await this.open(file) };
+    }
+    throw new Error("Too many untitled drafts today. Rename some first.");
   }
 
-  /** Sublime Text when installed (cursor on the first body line), else the default text editor. */
-  async open(file, line) {
+  /** Sublime Text when installed (cursor after "title: "), else the default text editor. */
+  async open(file) {
     try {
-      await run(SUBL, [`${file}:${line}`]);
+      await run(SUBL, [`${file}:3:8`]);
       return "Sublime Text";
     } catch {}
     try {

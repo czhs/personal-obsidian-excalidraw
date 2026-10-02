@@ -430,7 +430,6 @@ for (const dialog of [
   "#manage-dialog",
   "#folder-dialog",
   "#cover-dialog",
-  "#post-dialog",
 ])
   $(dialog).addEventListener("cancel", (event) => {
     if (working) event.preventDefault();
@@ -580,49 +579,15 @@ $("#remove-cover").addEventListener("click", () =>
   ),
 );
 
-function showSite(siteDirectory) {
-  $("#choose-site").textContent =
-    siteDirectory ?? "Choose your Jekyll site… ↗";
-}
-
-async function showPost() {
-  if (working) return;
-  $("#post-error").textContent = "";
-  $("#toast").hidden = true;
-  showSite((await window.vaults.blogStatus()).siteDirectory);
-  $("#post-dialog").showModal();
-  $("#post-name").focus();
-}
-$("#new-post").addEventListener("click", guard(showPost));
-$("#choose-site").addEventListener("click", async () => {
-  $("#post-error").textContent = "";
-  try {
-    const status = await window.vaults.blogChoose();
-    if (status) showSite(status.siteDirectory);
-  } catch (error) {
-    $("#post-error").textContent = error.message;
-  }
-});
-$("#post-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  if (working) return;
-  $("#post-error").textContent = "";
-  setWorking(true);
-  $("#post-submit").textContent = "Creating…";
-  try {
-    const { file, editor } = await window.vaults.blogCreate({
-      title: $("#post-name").value,
-      description: $("#post-description").value,
-      tags: $("#post-tags").value,
-    });
-    $("#post-dialog").close();
-    for (const id of ["#post-name", "#post-description", "#post-tags"])
-      $(id).value = "";
+$("#new-post").addEventListener(
+  "click",
+  guard(async () => {
+    if (working) return;
+    if (!(await window.vaults.blogStatus()).siteDirectory) {
+      toast("Choose your website folder (the one with _config.yml).");
+      if (!(await window.vaults.blogChoose())) return;
+    }
+    const { file, editor } = await window.vaults.blogCreate();
     toast(`Draft ${file.split("/").pop()} opened in ${editor}.`);
-  } catch (error) {
-    $("#post-error").textContent = error.message;
-  } finally {
-    $("#post-submit").textContent = "Create and open ↗";
-    setWorking(false);
-  }
-});
+  }),
+);
